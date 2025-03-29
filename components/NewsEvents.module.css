@@ -1,0 +1,32 @@
+/* components/NewsEvents.module.css */
+.tickerWrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+  
+  .ticker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker 90s linear infinite;
+  }
+  
+  .tickerItem {
+    display: inline-block;
+    padding-right: 100px;
+  }
+  
+  @keyframes ticker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  /* Pausa a animação quando o usuário passa o mouse por cima */
+  .tickerWrapper:hover .ticker {
+    animation-play-state: paused;
+  } 
