@@ -8,6 +8,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import SocialBar from '@/components/SocialBar';
 import Footer from '@/components/Footer';
+import ImageUploader from '@/components/ImageUploader';
 
 // Remova a prop { params } daqui
 export default function EditarNoticia() {
@@ -179,15 +180,27 @@ export default function EditarNoticia() {
 
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                URL da Imagem
+                Imagem da Notícia
               </label>
-              <input
-                type="text"
-                value={noticia.imagem || ''} // Garanta que value não seja null/undefined
-                onChange={(e) => setNoticia({ ...noticia, imagem: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Deixe em branco para usar a imagem padrão"
+              <ImageUploader
+                onImageUpload={(url) => setNoticia({ ...noticia, imagem: url })}
               />
+              {noticia?.imagem && (
+                <div className="mt-2">
+                  <img
+                    src={noticia.imagem}
+                    alt="Preview"
+                    className="w-full max-w-xs h-auto rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setNoticia({ ...noticia, imagem: '' })}
+                    className="text-red-600 text-sm mt-2 hover:text-red-800"
+                  >
+                    Remover imagem
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end gap-4">

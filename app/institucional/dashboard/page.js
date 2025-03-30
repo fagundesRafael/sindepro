@@ -12,6 +12,7 @@ import Link from 'next/link';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import CopyNotification from '@/components/CopyNotification';
 import padlock from '@/public/general/padlock.png';
+import ImageUploader from '@/components/ImageUploader';
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -45,6 +46,14 @@ export default function Dashboard() {
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
 
   const [showCopyNotification, setShowCopyNotification] = useState(false);
+  const [showSaveNotification, setShowSaveNotification] = useState(false);
+
+  const [configs, setConfigs] = useState({
+    L1: '', L2: '', L3: '', L4: '', L5: '', L6: '', L7: '', L8: '',
+    S1: '', S2: '', S3: '', C1: '', C2: '', C3: '', C4: '',
+    D1: '', D2: '', D3: '', D4: '',
+    E1: '', E2: ''
+  });
 
   const categorias = [
     'Política', 'Jurídica', 'Eventos', 'Conquistas', 'Capacitação', 'Convênios'
@@ -63,6 +72,12 @@ export default function Dashboard() {
   useEffect(() => {
     if (activeTab === 'usuarios') {
       fetchUsers();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab === 'destaques') {
+      fetchConfigs();
     }
   }, [activeTab]);
 
@@ -93,6 +108,16 @@ export default function Dashboard() {
       setUsers(data);
     } catch (error) {
       console.error('Erro ao buscar usuários:', error);
+    }
+  };
+
+  const fetchConfigs = async () => {
+    try {
+      const response = await fetch('/api/configs');
+      const data = await response.json();
+      setConfigs(data);
+    } catch (error) {
+      console.error('Erro ao buscar configurações:', error);
     }
   };
 
@@ -176,6 +201,26 @@ export default function Dashboard() {
     }
   };
 
+  const handleConfigSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/configs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(configs),
+      });
+
+      if (response.ok) {
+        setShowSaveNotification(true);
+      }
+    } catch (error) {
+      console.error('Erro ao salvar configurações:', error);
+      alert('Erro ao salvar configurações');
+    }
+  };
+
   // Função para renderizar o conteúdo baseado na aba ativa
   const renderTabContent = () => {
     switch (activeTab) {
@@ -183,6 +228,7 @@ export default function Dashboard() {
     return (
           <>
             <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Gerenciamento de publicações</h2>
               <button
                 onClick={() => setShowForm(!showForm)}
                 className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition-colors"
@@ -291,14 +337,26 @@ export default function Dashboard() {
                 </div>
 
       <div>
-                  <label className="block mb-1">URL da Imagem</label>
-                  <input
-                    type="text"
-                    value={formData.imagem}
-                    onChange={(e) => setFormData({...formData, imagem: e.target.value})}
-                    className="w-full border p-2 rounded"
-                    placeholder="Deixe em branco para usar a imagem padrão"
+                  <label className="block mb-1">Imagem da Notícia</label>
+                  <ImageUploader
+                    onImageUpload={(url) => setFormData({ ...formData, imagem: url })}
                   />
+                  {formData.imagem && (
+                    <div className="mt-2">
+                      <img
+                        src={formData.imagem}
+                        alt="Preview"
+                        className="w-full max-w-xs h-auto rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, imagem: '' })}
+                        className="text-red-600 text-sm mt-2 hover:text-red-800"
+                      >
+                        Remover imagem
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <button
@@ -311,7 +369,7 @@ export default function Dashboard() {
             )}
 
             {/* Lista de Notícias */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-2">
               {loading ? (
                 <p>Carregando...</p>
               ) : news.length > 0 ? (
@@ -477,7 +535,7 @@ export default function Dashboard() {
             </div>
 
             {/* Paginação Atualizada */}
-            <div className="mt-8 flex justify-center">
+            <div className="mt-2 flex justify-center">
               <nav className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -540,14 +598,105 @@ export default function Dashboard() {
         );
       case 'destaques':
         return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold text-gray-800">Destaques</h2>
+          <div className="bg-white p-2 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Configuração de destaques em geral</h2>
+            
+            <form onSubmit={handleConfigSubmit} className="space-y-8">
+              {/* Grupo 1 */}
+              <div className="border p-4 rounded-lg">
+                <h3 className="text-lg font-medium mb-4">Notícias de linha</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8'].map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {field}
+                      </label>
+                      <input
+                        type="text"
+                        value={configs[field] || ''}
+                        onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grupo 2 */}
+              <div className="border p-4 rounded-lg">
+                <h3 className="text-lg font-medium mb-4">Notícias de <span className='text-red-700 underline'>slide</span> e <span className='text-red-700 underline'>colunas</span> existentes no carrossel</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {['S1', 'S2', 'S3', 'C1', 'C2', 'C3', 'C4'].map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {field}
+                      </label>
+                      <input
+                        type="text"
+                        value={configs[field] || ''}
+                        onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grupo 3 */}
+              <div className="border p-4 rounded-lg">
+                <h3 className="text-lg font-medium mb-4">Notícias em destaque</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {['D1', 'D2', 'D3', 'D4'].map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {field}
+                      </label>
+                      <input
+                        type="text"
+                        value={configs[field] || ''}
+                        onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grupo 4 */}
+              <div className="border p-4 rounded-lg">
+                <h3 className="text-lg font-medium mb-4">Notícias dos próximos eventos</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {['E1', 'E2'].map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {field}
+                      </label>
+                      <input
+                        type="text"
+                        value={configs[field] || ''}
+                        onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800 transition-colors"
+                >
+                  Salvar Configurações
+                </button>
+              </div>
+            </form>
           </div>
         );
       case 'usuarios':
         return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Usuários</h2>
+          <div className="bg-white p-2 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Listagem e gerenciamento de usuários</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -629,8 +778,8 @@ export default function Dashboard() {
 
   return (
     <>
-      <Navbar />
       <SocialBar />
+      <Navbar />
       
       <main className="container mx-auto px-4 py-8">
         {/* Título do Painel */}
@@ -640,7 +789,7 @@ export default function Dashboard() {
         </div>
 
         {/* Abas */}
-        <div className="mb-8">
+        <div className="mb-4">
           <div className="border-b border-gray-200">
             <nav className="flex -mb-px">
               <button
@@ -678,9 +827,9 @@ export default function Dashboard() {
         </div>
 
         {/* Conteúdo da Aba */}
-        <div className="mt-6">
+        <div className="mt-2">
           {renderTabContent()}
-        </div>
+      </div>
       </main>
 
       <ConfirmationModal 
@@ -709,6 +858,12 @@ export default function Dashboard() {
         isVisible={showCopyNotification}
         onClose={() => setShowCopyNotification(false)}
         message="ID copiado com sucesso!"
+      />
+
+      <CopyNotification
+        isVisible={showSaveNotification}
+        onClose={() => setShowSaveNotification(false)}
+        message="Configurações salvas com sucesso!"
       />
 
       <Footer />
