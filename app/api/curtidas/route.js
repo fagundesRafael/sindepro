@@ -1,7 +1,7 @@
 //app/api/curtidas/route.js
-import { connectDB } from '@/lib/mongoose';
+import { connectDB } from '@/lib/mongodb';
 import Curtida from '@/models/Curtida';
-import Noticia from '@/models/Noticia';
+import Noticia from '@/models/News';
 
 export async function POST(request) {
   try {
