@@ -29,4 +29,19 @@
   /* Pausa a animação quando o usuário passa o mouse por cima */
   .tickerWrapper:hover .ticker {
     animation-play-state: paused;
+  }
+
+  .newsLink {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .newsLink:hover {
+    text-decoration: underline;
+  }
+
+  .emptyNews {
+    color: #666;
+    cursor: default;
   } 

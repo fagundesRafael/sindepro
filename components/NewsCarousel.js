@@ -3,43 +3,59 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function NewsCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [slides, setSlides] = useState([]);
 
-  // Dados simulados para o carrossel com imagens do Pexels
-  const slides = [
-    {
-      id: 1,
-      titulo: "Sindepro realiza assembleia para discutir melhorias na carreira",
-      texto: "Encontro contou com a presença de diversos delegados e autoridades do estado para debater temas importantes para a categoria e definir estratégias para os próximos meses.",
-      imagem: "https://images.pexels.com/photos/30267350/pexels-photo-30267350/free-photo-of-charmosa-casa-breta-com-bicicleta-em-ouessant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      data: "15/06/2023",
-      hora: "14:30",
-      autor: "Maria Silva"
-    },
-    {
-      id: 2,
-      titulo: "Curso de capacitação para delegados será realizado em agosto",
-      texto: "Inscrições já estão abertas para associados do Sindepro. O curso abordará temas relevantes para a atuação profissional e contará com palestrantes renomados.",
-      imagem: "https://images.pexels.com/photos/16648616/pexels-photo-16648616/free-photo-of-pessoas-transporte-publico-estacao-plataforma.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      data: "20/07/2023",
-      hora: "09:45",
-      autor: "João Santos"
-    },
-    {
-      id: 3,
-      titulo: "Sindepro participa de reunião com secretário de segurança pública",
-      texto: "Foram discutidas pautas importantes para a categoria, incluindo melhorias nas condições de trabalho e valorização da carreira de delegado de polícia.",
-      imagem: "https://images.pexels.com/photos/30783373/pexels-photo-30783373/free-photo-of-homem-preparando-cafe-em-um-jardim-verdejante.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      data: "05/08/2023",
-      hora: "16:15",
-      autor: "Carlos Oliveira"
-    }
-  ];
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        // Buscar configurações
+        const configResponse = await fetch('/api/configs');
+        const configData = await configResponse.json();
+        
+        // Extrair IDs S1, S2, S3
+        const slideIds = ['S1', 'S2', 'S3'].map(key => configData[key]).filter(Boolean);
+        
+        // Buscar notícias correspondentes
+        const newsPromises = slideIds.map(id =>
+          fetch(`/api/news/${id}`)
+            .then(res => res.json())
+            .catch(() => null)
+        );
+
+        const newsResults = await Promise.all(newsPromises);
+        
+        // Formatar slides
+        const validSlides = newsResults
+          .filter(item => item && item.titulo)
+          .map(item => ({
+            id: item._id,
+            titulo: item.titulo,
+            texto: item.descricao,
+            imagem: item.imagem || '/general/no-image.jpg',
+            data: new Date(item.data).toLocaleDateString('pt-BR'),
+            hora: new Date(item.data).toLocaleTimeString('pt-BR', { 
+              hour: '2-digit', 
+              minute: '2-digit' 
+            }),
+            autor: item.autor
+          }));
+
+        setSlides(validSlides);
+      } catch (error) {
+        console.error('Erro ao buscar slides:', error);
+        setSlides([]);
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   // Função para avançar para o próximo slide
   const nextSlide = () => {
@@ -89,51 +105,71 @@ export default function NewsCarousel() {
 
   return (
     <div className="relative h-80 mx-auto w-full overflow-hidden rounded-lg">
-      {slides.map((slide, index) => (
-        <div 
-          key={slide.id}
-          className={`absolute inset-0 transition-all duration-500 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-          }`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onClick={handleClick}
-        >
-          {/* Imagem de fundo */}
-          <div className={`absolute inset-0 transition-transform duration-300 ease-in-out ${
-            isHovered && !isClicked ? 'scale-105' : 'scale-100'
-          }`}>
-            <Image 
-              src={slide.imagem} 
-              alt={slide.titulo} 
-              fill 
-              sizes="(max-width: 768px) 100vw, 75vw"
-              style={{objectFit: "cover"}}
-              priority={index === 0}
-              unoptimized={true}
-            />
-          </div>
-          
-          {/* Overlay vermelho com texto - opacidade 75% normal, 90% no hover */}
+      {slides.length > 0 ? (
+        slides.map((slide, index) => (
           <div 
-            className="absolute inset-y-0 left-0 w-1/2 flex items-center"
-            style={{
-              backgroundColor: `rgba(185, 28, 28, ${isHovered ? 0.9 : 0.75})`, // Vermelho com opacidade variável
-              transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out, background-color 0.3s ease-in-out',
-              opacity: isTransitioning ? 0 : 1,
-              transform: isTransitioning ? 'translateX(50%)' : 'translateX(0)' // Mover apenas até a metade da tela
-            }}
+            key={slide.id}
+            className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            }`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            <div className="p-6 text-white">
-              <h2 className="text-2xl font-bold mb-3">{slide.titulo}</h2>
-              <p className="mb-4 text-sm">{slide.texto}</p>
-              <p className="text-xs mt-auto">
-                {slide.data}, {slide.hora} | Autor: <em>{slide.autor}</em>
-              </p>
-            </div>
+            <Link href={`/noticias/${slide.id}`}>
+              {/* Imagem de fundo */}
+              <div className={`absolute inset-0 transition-transform duration-300 ease-in-out ${
+                isHovered && !isClicked ? 'scale-105' : 'scale-100'
+              }`}>
+                <Image 
+                  src={slide.imagem} 
+                  alt={slide.titulo} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, 75vw"
+                  style={{objectFit: "cover"}}
+                  priority={index === 0}
+                  unoptimized={true}
+                />
+              </div>
+              
+              {/* Overlay vermelho com texto - opacidade 75% normal, 90% no hover */}
+              <div 
+                className="absolute inset-y-0 left-0 w-1/2 flex items-center"
+                style={{
+                  backgroundColor: `rgba(185, 28, 28, ${isHovered ? 0.9 : 0.75})`, // Vermelho com opacidade variável
+                  transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out, background-color 0.3s ease-in-out',
+                  opacity: isTransitioning ? 0 : 1,
+                  transform: isTransitioning ? 'translateX(50%)' : 'translateX(0)' // Mover apenas até a metade da tela
+                }}
+              >
+                <div className="p-6 text-white">
+                  <h2 className="text-2xl font-bold mb-3">{slide.titulo}</h2>
+                  <p className="mb-4 text-sm">
+                    {slide.texto.length > 60 
+                      ? `${slide.texto.substring(0, 60)}...` 
+                      : slide.texto
+                    }
+                  </p>
+                  <p className="text-xs mt-auto">
+                    {slide.data}, {slide.hora} | Autor: <em>{slide.autor}</em>
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+          <Image
+            src="/general/no-image.jpg"
+            alt="Sem notícias"
+            fill
+            style={{objectFit: "cover"}}
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <p className="text-white text-xl">Insira mais notícias</p>
           </div>
         </div>
-      ))}
+      )}
 
       {/* Controles de navegação */}
       <div className="absolute bottom-4 left-0 right-0 flex justify-center z-20">

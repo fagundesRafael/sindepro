@@ -1,4 +1,7 @@
 //app/page.js
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
@@ -7,101 +10,72 @@ import SocialBar from "../components/SocialBar";
 import NewsCarousel from "../components/NewsCarousel";
 
 export default function Home() {
-  // Dados simulados para notícias
-  const noticias = [
-    {
-      id: 1,
-      titulo: "Sindepro realiza assembleia para discutir melhorias na carreira",
-      resumo: "Encontro contou com a presença de diversos delegados e autoridades do estado",
-      imagem: "/general/no-image.jpg",
-    },
-    {
-      id: 2,
-      titulo: "Curso de capacitação para delegados será realizado em agosto",
-      resumo: "Inscrições já estão abertas para associados do Sindepro",
-      imagem: "/general/no-image.jpg",
-    },
-    {
-      id: 3,
-      titulo: "Sindepro participa de reunião com secretário de segurança pública",
-      resumo: "Foram discutidas pautas importantes para a categoria",
-      imagem: "/general/no-image.jpg",
-    },
-    {
-      id: 4,
-      titulo: "Conquista: aprovado projeto que beneficia delegados aposentados",
-      resumo: "Sindepro comemora vitória após anos de luta pela categoria",
-      data: "10/05/2023",
-      hora: "11:20",
-      autor: "Pedro Almeida",
-      imagem: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-    {
-      id: 5,
-      titulo: "Nova sede do Sindepro será inaugurada no próximo mês",
-      resumo: "Espaço contará com infraestrutura moderna para melhor atender os associados",
-      data: "02/05/2023",
-      hora: "09:15",
-      autor: "Ana Souza",
-      imagem: "https://images.pexels.com/photos/1170412/pexels-photo-1170412.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-  ];
+  const [cardsNoticias, setCardsNoticias] = useState([]);
+  const [noticiasDestaque, setNoticiasDestaque] = useState([]);
+  const [eventos, setEventos] = useState([]);
 
-  // Dados simulados para eventos
-  const eventos = [
-    {
-      id: 1,
-      titulo: "Confraternização anual do Sindepro",
-      data: "15/12/2023",
-      imagem: "/general/no-image.jpg",
-    },
-    {
-      id: 2,
-      titulo: "Seminário sobre segurança pública",
-      data: "22/09/2023",
-      imagem: "/general/no-image.jpg",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Buscar configurações
+        const configResponse = await fetch('/api/configs');
+        const configData = await configResponse.json();
 
-  // Dados para os cards laterais (agora 4 cards)
-  const cardsNoticias = [
-    {
-      id: 3,
-      titulo: "Conquista: aprovado projeto que beneficia delegados aposentados",
-      resumo: "Sindepro comemora vitória após anos de luta pela categoria",
-      data: "10/05/2023",
-      hora: "11:20",
-      autor: "Pedro Almeida",
-      imagem: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
-    },
-    {
-      id: 4,
-      titulo: "Nova sede do Sindepro será inaugurada no próximo mês",
-      resumo: "Espaço contará com infraestrutura moderna para melhor atender os associados",
-      data: "02/05/2023",
-      hora: "09:15",
-      autor: "Ana Souza",
-      imagem: "https://images.pexels.com/photos/1170412/pexels-photo-1170412.jpeg",
-    },
-    {
-      id: 5,
-      titulo: "Delegados participam de congresso internacional",
-      resumo: "Representantes do Sindepro levam experiências para debate global",
-      data: "15/04/2023",
-      hora: "14:30",
-      autor: "Carlos Silva",
-      imagem: "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg",
-    },
-    {
-      id: 6,
-      titulo: "Novo convênio traz benefícios exclusivos",
-      resumo: "Parceria garante vantagens especiais para associados",
-      data: "01/04/2023",
-      hora: "10:45",
-      autor: "Maria Santos",
-      imagem: "https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg",
-    }
-  ];
+        // Função auxiliar para buscar notícias por IDs
+        const fetchNewsByIds = async (ids) => {
+          const newsPromises = ids.map(id =>
+            fetch(`/api/news/${id}`)
+              .then(res => res.json())
+              .catch(() => null)
+          );
+          return Promise.all(newsPromises);
+        };
+
+        // Buscar cards de notícias (C1-C4)
+        const cardIds = ['C1', 'C2', 'C3', 'C4'].map(key => configData[key]);
+        const cardNews = await fetchNewsByIds(cardIds);
+        
+        // Preparar cards com fallback para slots vazios
+        const processedCards = Array(4).fill(null).map((_, index) => {
+          const news = cardNews[index];
+          return news ? {
+            id: news._id,
+            titulo: news.titulo,
+            resumo: news.descricao,
+            imagem: news.imagem || '/general/no-image.jpg',
+            data: new Date(news.data).toLocaleDateString('pt-BR'),
+            hora: new Date(news.data).toLocaleTimeString('pt-BR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          } : {
+            id: null,
+            titulo: "Informe uma notícia",
+            resumo: "Informe uma notícia",
+            imagem: '/general/no-image.jpg',
+            data: "",
+            hora: ""
+          };
+        });
+        setCardsNoticias(processedCards);
+
+        // Buscar notícias em destaque (D1-D4)
+        const destaqueIds = ['D1', 'D2', 'D3', 'D4'].map(key => configData[key]);
+        const destaqueNews = await fetchNewsByIds(destaqueIds);
+        setNoticiasDestaque(destaqueNews.filter(Boolean));
+
+        // Buscar eventos (E1-E2)
+        const eventoIds = ['E1', 'E2'].map(key => configData[key]);
+        const eventoNews = await fetchNewsByIds(eventoIds);
+        setEventos(eventoNews.filter(Boolean));
+
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -126,27 +100,36 @@ export default function Home() {
             <div className="w-full lg:w-[40%] grid grid-cols-2 gap-4">
               {cardsNoticias.map((noticia, index) => (
                 <div 
-                  key={noticia.id} 
+                  key={`card-section-${noticia.id || index}`} 
                   className="bg-white rounded-lg shadow-md overflow-hidden h-[152px]"
                 >
                   <div className="relative h-16">
                     <Image 
-                      src={noticia.imagem} 
-                      alt={noticia.titulo} 
-                      fill 
+                      src={noticia.imagem}
+                      alt={noticia.titulo || "Imagem da notícia"}
+                      fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       style={{objectFit: "cover"}}
                     />
                   </div>
                   <div className="p-2">
-                    <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
-                      <span>{noticia.data}</span>
-                      <span>{noticia.hora}</span>
-                    </div>
-                    <h3 className="font-bold text-xs mb-1 text-gray-800 hover:text-red-700 line-clamp-2">
-                      <Link href={`/noticias/${noticia.id}`}>{noticia.titulo}</Link>
-                    </h3>
-                    <p className="text-gray-600 text-[10px] line-clamp-1">{noticia.resumo}</p>
+                    {noticia.id ? (
+                      <>
+                        <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
+                          <span>{noticia.data}</span>
+                          <span>{noticia.hora}</span>
+                        </div>
+                        <h3 className="font-bold text-xs mb-1 text-gray-800 hover:text-red-700 line-clamp-2">
+                          <Link href={`/noticias/${noticia.id}`}>{noticia.titulo}</Link>
+                        </h3>
+                        <p className="text-gray-600 text-[10px] line-clamp-1">{noticia.resumo}</p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="font-bold text-xs mb-1 text-gray-400">{noticia.titulo}</h3>
+                        <p className="text-gray-400 text-[10px]">{noticia.resumo}</p>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -166,25 +149,84 @@ export default function Home() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {noticias.slice(0, 4).map((noticia) => (
-                <div key={noticia.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              {noticiasDestaque.map((noticia, index) => (
+                <div key={`destaque-section-${noticia._id}-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="relative h-48">
                     <Image 
-                      src={noticia.imagem} 
-                      alt={noticia.titulo} 
-                      fill 
+                      src={noticia.imagem || '/general/no-image.jpg'}
+                      alt={noticia.titulo || "Imagem da notícia em destaque"}
+                      fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       style={{objectFit: "cover"}}
                     />
+                    <div className="absolute top-0 left-0 bg-red-700 text-white px-2 py-1 text-sm">
+                      {noticia.categoria}
+                    </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-lg mb-2 text-gray-800 hover:text-red-700">
-                      <Link href={`/noticias/${noticia.id}`}>{noticia.titulo}</Link>
+                  <div className="p-4 flex flex-col h-[200px]">
+                    <h3 className="font-bold text-lg mb-2 text-gray-800 hover:text-red-700 line-clamp-2">
+                      <Link href={`/noticias/${noticia._id}`}>{noticia.titulo}</Link>
                     </h3>
-                    <p className="text-gray-600 text-sm">{noticia.resumo}</p>
-                    <Link href={`/noticias/${noticia.id}`} className="mt-3 inline-block text-red-700 hover:underline text-sm">
-                      Leia mais
-                    </Link>
+                    <p className="text-gray-600 text-sm line-clamp-3 mb-4">{noticia.descricao}</p>
+                    <div className="mt-auto">
+                      <div className="flex flex-col gap-2 mb-2">
+                        <div key={`destaque-author-${noticia._id}-${index}`} className="flex items-center text-sm text-gray-500">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4 mr-1"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                            />
+                          </svg>
+                          <span className="text-xs">{noticia.autor}</span>
+                        </div>
+                        <div key={`destaque-date-${noticia._id}-${index}`} className="flex items-center text-sm text-gray-500">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-4 h-4 mr-1"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+                            />
+                          </svg>
+                          <span className="text-xs">
+                            {new Date(noticia.data).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                      </div>
+                      <Link 
+                        href={`/noticias/${noticia._id}`} 
+                        className="text-red-600 hover:text-red-800 text-sm font-medium inline-flex items-center"
+                      >
+                        Leia mais
+                        <svg 
+                          className="w-4 h-4 ml-1" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -199,8 +241,8 @@ export default function Home() {
               <div className="bg-white rounded-lg shadow-md overflow-hidden relative group">
                 <div className="relative h-48">
                   <Image 
-                    src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
-                    alt="Área Institucional" 
+                    src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg"
+                    alt="Imagem representativa da área institucional"
                     fill 
                     sizes="(max-width: 768px) 100vw, 50vw"
                     style={{objectFit: "cover"}}
@@ -233,8 +275,8 @@ export default function Home() {
               <div className="bg-white rounded-lg shadow-md overflow-hidden relative group">
                 <div className="relative h-48">
                   <Image 
-                    src="https://images.pexels.com/photos/3893650/pexels-photo-3893650.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
-                    alt="Galeria de Fotos" 
+                    src="https://images.pexels.com/photos/3893650/pexels-photo-3893650.jpeg"
+                    alt="Imagem representativa da galeria de fotos"
                     fill 
                     sizes="(max-width: 768px) 100vw, 50vw"
                     style={{objectFit: "cover"}}
@@ -273,23 +315,25 @@ export default function Home() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {eventos.map((evento) => (
-                <div key={evento.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
+              {eventos.map((evento, index) => (
+                <div key={`evento-section-${evento._id}-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden flex">
                   <div className="relative w-1/3">
                     <Image 
-                      src={evento.imagem} 
-                      alt={evento.titulo} 
-                      fill 
+                      src={evento.imagem || '/general/no-image.jpg'}
+                      alt={evento.titulo || "Imagem do evento"}
+                      fill
                       sizes="(max-width: 768px) 33vw, 16vw"
                       style={{objectFit: "cover"}}
                     />
                   </div>
                   <div className="p-4 w-2/3">
-                    <div className="text-red-700 font-medium mb-1">{evento.data}</div>
+                    <div className="text-red-700 font-medium mb-1">
+                      {new Date(evento.data).toLocaleDateString('pt-BR')}
+                    </div>
                     <h3 className="font-bold text-lg mb-2 text-gray-800 hover:text-red-700">
-                      <Link href={`/eventos/${evento.id}`}>{evento.titulo}</Link>
+                      <Link href={`/noticias/${evento._id}`}>{evento.titulo}</Link>
                     </h3>
-                    <Link href={`/eventos/${evento.id}`} className="mt-2 inline-block text-red-700 hover:underline text-sm">
+                    <Link href={`/noticias/${evento._id}`} className="mt-2 inline-block text-red-700 hover:underline text-sm">
                       Saiba mais
                     </Link>
                   </div>

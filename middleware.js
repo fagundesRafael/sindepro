@@ -1,48 +1,68 @@
+// middleware.js
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 export default withAuth(
   function middleware(req) {
-    const token = req.nextauth.token;
-    const isInstitucionalPath = req.nextUrl.pathname.startsWith('/institucional');
-    const isDashboardPath = req.nextUrl.pathname === '/institucional/dashboard';
+    const token = req.nextauth.token; // Token DEVE conter id, name, email, isAdmin, isActive diretamente
+    const { pathname } = req.nextUrl;
 
-    // Para debug - remova em produção
-    console.log('Token:', token);
-    console.log('Is Admin:', token?.user?.isAdmin);
-    console.log('Current Path:', req.nextUrl.pathname);
+    // Para debug - Verifique as propriedades DIRETAS do token
+    console.log('Middleware - Pathname:', pathname);
+    console.log('Middleware - Token Recebido:', token); // Veja o que realmente está no token
 
-    // Rota do dashboard
-    if (isDashboardPath) {
-      // Verifica explicitamente se isAdmin é true
-      if (token?.user?.isAdmin === true) {
-        return NextResponse.next();
-      }
-      // Se não for admin, redireciona para home
-      return NextResponse.redirect(new URL('/', req.url));
+    // --- Lógica de Proteção para /institucional ---
+
+    // 1. Verifica se está logado (o próprio withAuth pode redirecionar se não configurado `authorized:()=>true`)
+    // Mas como usamos authorized: () => true, precisamos verificar o token aqui.
+    if (!token) {
+      // Se não estiver logado, redireciona para o login
+      console.log(`Acesso negado a ${pathname}: Não autenticado.`);
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('callbackUrl', pathname); // Opcional: voltar após login
+      return NextResponse.redirect(loginUrl);
     }
 
-    // Outras rotas institucionais
-    if (isInstitucionalPath) {
-      if (!token) {
-        return NextResponse.redirect(new URL('/login', req.url));
-      }
-      return NextResponse.next();
+    // 2. Verifica se está ATIVO (isActive: true) - Obrigatório para TODAS as rotas /institucional
+    // Acessa diretamente token.isActive
+    if (!token.isActive) {
+      console.log(`Acesso negado a ${pathname}: Usuário INATIVO (isActive: ${token.isActive}). Redirecionando para /`);
+      const homeUrl = new URL('/', req.url);
+      return NextResponse.redirect(homeUrl);
     }
 
-    return NextResponse.next();
+    // Se chegou aqui, o usuário está LOGADO e ATIVO.
+
+    // 3. Verifica se é a rota do DASHBOARD e se é ADMIN
+    if (pathname.startsWith('/institucional/dashboard')) {
+      // Acessa diretamente token.isAdmin
+      if (!token.isAdmin) {
+        console.log(`Acesso negado a ${pathname}: Usuário não é ADMIN (isAdmin: ${token.isAdmin}). Redirecionando para /`);
+        const homeUrl = new URL('/', req.url); // Ou para '/institucional' se tiver uma página lá
+        return NextResponse.redirect(homeUrl);
+      }
+      // Se for admin (e já sabemos que está ativo), permite acesso ao dashboard
+      console.log(`Acesso PERMITIDO ao DASHBOARD ${pathname} (isAdmin: ${token.isAdmin}, isActive: ${token.isActive})`);
+      return NextResponse.next(); // Permite acesso
+    }
+
+    // 4. Para OUTRAS rotas /institucional (não dashboard)
+    // Se chegou aqui, está logado, está ativo, e não é a rota do dashboard. Permite acesso.
+    console.log(`Acesso PERMITIDO a ${pathname} (isActive: ${token.isActive})`);
+    return NextResponse.next(); // Permite acesso
+
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
-        // Permite que o middleware seja executado para verificações personalizadas
-        return true;
-      },
+      // Esta configuração garante que a função middleware acima SEMPRE rode
+      // para as rotas no matcher, e nós fazemos a lógica de autorização dentro dela.
+      authorized: ({ token }) => true,
     },
   }
 );
 
 // Configurar quais rotas o middleware deve proteger
 export const config = {
-  matcher: ['/institucional/:path*']
-}; 
+  // Aplica o middleware a todas as rotas começando com /institucional/
+  matcher: ['/institucional/:path*'],
+};

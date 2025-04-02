@@ -62,8 +62,8 @@ export default function Navbar() {
               />
             </Link>
             <div className="flex flex-col ml-2 justify-center items-center">
-              <h1 className="text-7xl text-red-700 font-bold">SINDEPRO</h1>
-              <p className="text-[10px]">SINDICATO DOS DELEGADOS DE POLÍCIA CIVIL DO ESTADO DE RONDÔNIA</p>
+              <h1 className="text-[4rem] text-red-700 font-bold leading-[0.9]">SINDEPRO</h1>
+              <p className="text-[9px] text-slate-900 font-bold mt-[-5px]">SINDICATO DOS DELEGADOS DE POLÍCIA CIVIL DO ESTADO DE RONDÔNIA</p>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-6">

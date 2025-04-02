@@ -1,3 +1,4 @@
+//app/api/configs/route.js
 import { connectDB } from '@/lib/mongodb';
 import Config from '@/models/Config';
 

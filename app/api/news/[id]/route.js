@@ -1,3 +1,4 @@
+//app/api/news/[id]/route.js
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import News from '@/models/News';
@@ -5,7 +6,7 @@ import News from '@/models/News';
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     
     const deletedNews = await News.findByIdAndDelete(id);
     
@@ -31,7 +32,7 @@ export async function DELETE(request, { params }) {
 export async function GET(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     
     const news = await News.findById(id);
     if (!news) {
@@ -47,7 +48,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
     const data = await request.json();
     
     const updatedNews = await News.findByIdAndUpdate(

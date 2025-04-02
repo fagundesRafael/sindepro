@@ -9,6 +9,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    domains: ['ik.imagekit.io', 'images.pexels.com'],
   },
 }
 

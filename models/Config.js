@@ -1,3 +1,4 @@
+//models/Config.js
 import mongoose from 'mongoose';
 
 const configSchema = new mongoose.Schema({
