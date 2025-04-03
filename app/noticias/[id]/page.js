@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import SocialBar from '@/components/SocialBar';
 import Footer from '@/components/Footer';
 import AuthNotification from '@/components/AuthNotification'; // Importa o componente de notificação
+import Link from 'next/link';
 
 export default function NoticiaDetalhada() {
   const params = useParams();

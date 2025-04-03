@@ -1,8 +1,23 @@
 //app/institucional/convenios/page.js
+"use client";
+import Navbar from '@/components/Navbar';
+import SocialBar from '@/components/SocialBar';
+import Footer from '@/components/Footer';
+import OfflineNotice from '@/components/OfflineNotice';
+
 export default function Convenios() {
-    return (
-      <div>
-        <h1>Convenios</h1>
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen flex flex-col">
+      <SocialBar />
+      <Navbar />
+      <OfflineNotice />
+      
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Convênios</h1>
+        {/* Conteúdo da página */}
+      </main>
+      
+      <Footer />
+    </div>
+  );
+}
