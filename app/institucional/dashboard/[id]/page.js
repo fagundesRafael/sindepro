@@ -122,7 +122,7 @@ export default function EditarNoticia() {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-6">
+          <form onSubmit={handleSubmit} className="bg-white text-black p-6 rounded-lg shadow-md space-y-6">
             {/* ... restante do formulário ... */}
              <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">

@@ -18,7 +18,7 @@ export async function POST(request) {
     const { nome, email } = await request.json();
 
     // Caminho para o arquivo do formulário
-    const formularioPath = path.join(process.cwd(), 'public', 'general', 'formulario_de_filiacao.png');
+    const formularioPath = path.join(process.cwd(), 'public', 'general', 'formulario_de_filiacao.pdf');
     
     // Lê o arquivo
     const formulario = await fs.readFile(formularioPath);
@@ -47,7 +47,7 @@ export async function POST(request) {
       `,
       attachments: [
         {
-          filename: 'formulario_de_filiacao.png',
+          filename: 'formulario_de_filiacao.pdf',
           content: formulario,
         }
       ]

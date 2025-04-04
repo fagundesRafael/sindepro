@@ -14,7 +14,7 @@ export default function Diretoria() {
         <Navbar />
       </div>
       
-      <main className="flex-grow mx-[10%] py-8">
+      <main className="flex-grow mx-[10%] py-4">
         <div className="container mx-auto px-4">
           {/* Cabeçalho da página */}
           <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">DIRETORIA SINDEPRO</h1>
@@ -22,10 +22,9 @@ export default function Diretoria() {
           {/* Presidente Destaque */}
           <section className="mb-2">
             <div className="flex flex-col items-center">
-              <h2 className="text-2xl font-bold text-red-700 mb-2 text-center">PRESIDENTE</h2>
-              
-              <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center max-w-md mx-auto">
-                <div className="w-64 h-64 relative mb-2 rounded-full overflow-hidden border-4 border-red-700">
+              <h2 className="text-2xl font-bold text-red-700 text-center">PRESIDENTE</h2>
+              <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center max-w-md mx-auto">
+                <div className="w-24 h-24 relative mb-2 rounded-full overflow-hidden border-4 border-red-700">
                   <Image 
                     src="/general/no-image.jpg" 
                     alt="Foto do Presidente" 
@@ -34,8 +33,7 @@ export default function Diretoria() {
                   />
                 </div>
                 <div className="text-center">
-                  <h3 className="text-xl font-bold mb-2">DR. RENATO EDUARDO DE SOUZA</h3>
-                  <p className="text-gray-600">Presidente do SINDEPRO</p>
+                  <h3 className="text-xl text-slate-700 font-bold mb-2">DR. RENATO EDUARDO DE SOUZA</h3>
                 </div>
               </div>
             </div>
@@ -45,7 +43,7 @@ export default function Diretoria() {
           <section className="mb-2 bg-gray-50 rounded-lg p-8 shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-2 text-center">DIRETORIA ATUAL SINDEPRO (2017/2018)</h2>
             
-            <div className="space-y-2 max-w-3xl mx-auto">
+            <div className=" text-slate-700 max-w-3xl mx-auto">
               <p className="flex"><span className="font-bold w-56">Presidente:</span> <span>Renato Eduardo de Souza</span></p>
               <p className="flex"><span className="font-bold w-56">Vice-Presidente:</span> <span>Fábio Henrique Fernandez de Campos</span></p>
               <p className="flex"><span className="font-bold w-56">Tesoureiro:</span> <span>Mário Jorge Pinto Sobrinho</span></p>
@@ -75,7 +73,7 @@ export default function Diretoria() {
           <section className="mb-2 bg-gray-50 rounded-lg p-8 shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-2 text-center">DIRETORIA ADEPOL 2016/2018</h2>
             
-            <div className="space-y-2 max-w-3xl mx-auto">
+            <div className=" text-slate-700 max-w-3xl mx-auto">
               <p className="flex"><span className="font-bold w-56">Presidente:</span> <span>Dr. Renato Eduardo de Souza</span></p>
               <p className="flex"><span className="font-bold w-56">Vice-presidente:</span> <span>Dr. Júlio César Souza Ferreira</span></p>
               <p className="flex"><span className="font-bold w-56">Secretário-geral:</span> <span>Dr. Sandro Luiz Alves de Moura</span></p>
@@ -107,7 +105,7 @@ export default function Diretoria() {
           <section className="mb-2 bg-gray-50 rounded-lg p-8 shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-2 text-center">DIRETORIA ANTERIOR (2014/2016)</h2>
             
-            <div className="space-y-2 max-w-3xl mx-auto">
+            <div className="space-y-2 text-slate-700 max-w-3xl mx-auto">
               <p className="flex"><span className="font-bold w-56">Presidente:</span> <span>Antônio Garção Sobral Neto</span></p>
               <p className="flex"><span className="font-bold w-56">Vice-presidente:</span> <span>Victor de Santana Menezes</span></p>
               <p className="flex"><span className="font-bold w-56">Secretária Geral:</span> <span>Márcia Cristina Gazoni</span></p>
@@ -124,7 +122,7 @@ export default function Diretoria() {
 
           {/* Histórico */}
           <section className="mb-2">
-            <div className="bg-gray-50 p-6 rounded-lg shadow mb-2">
+            <div className=" text-slate-700 max-w-3xl mx-auto">
               <p className="text-lg">O atual Sindicato teve início como Associação no ano de 1988 até sua criação em 1992, e teve as seguintes diretorias:</p>
             </div>
             
@@ -132,7 +130,7 @@ export default function Diretoria() {
               {/* Diretorias históricas - usando acordeão para economizar espaço */}
               <details className="bg-white p-4 rounded-lg shadow">
                 <summary className="font-bold text-red-700 cursor-pointer py-2">21/04/1988/89</summary>
-                <div className="mt-2 pl-4 space-y-1 text-sm">
+                <div className=" text-slate-700 max-w-3xl mx-auto">
                   <p><span className="font-semibold">Presidente:</span> Antonio José Adão</p>
                   <p><span className="font-semibold">Vice-presidente:</span> Nilson Brito dos Santos</p>
                   <p><span className="font-semibold">Secretário:</span> Luiz Gleysman Alves de Oliveira</p>
@@ -148,7 +146,7 @@ export default function Diretoria() {
               
               <details className="bg-white p-4 rounded-lg shadow">
                 <summary className="font-bold text-red-700 cursor-pointer py-2">20/03/1990/91</summary>
-                <div className="mt-2 pl-4 space-y-1 text-sm">
+                <div className=" text-slate-700 max-w-3xl mx-auto">
                   <p><span className="font-semibold">Presidente:</span> Francisco Cândido Marculino</p>
                   <p><span className="font-semibold">Vice-presidente:</span> Pedro Rates Gomes Neto</p>
                   <p><span className="font-semibold">2º Vice-presidente:</span> Túlio Anderson Rodrigues da Costa</p>
@@ -168,7 +166,7 @@ export default function Diretoria() {
               {/* Adicione os outros períodos históricos como detalhes adicionais */}
               <details className="bg-white p-4 rounded-lg shadow">
                 <summary className="font-bold text-red-700 cursor-pointer py-2">21/04/1992/93 (Primeira diretoria do SINDEPRO)</summary>
-                <div className="mt-2 pl-4 space-y-1 text-sm">
+                <div className=" text-slate-700 max-w-3xl mx-auto">
                   <p><span className="font-semibold">Presidente:</span> Ricardo Antônio Santana de Aguiar</p>
                   <p><span className="font-semibold">Vice-presidente:</span> Valdevino Vicente de Mattos</p>
                   <p><span className="font-semibold">1º Secretário:</span> João dos Reis Lacerda</p>

@@ -141,7 +141,7 @@ export default function TodasNoticias() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
+                    <h2 className="text-lg font-semibold text-red-700 mb-1 line-clamp-2">
                       {noticia.titulo}
                     </h2>
                     <div className="flex items-center text-xs text-gray-500 mb-2 space-x-2">

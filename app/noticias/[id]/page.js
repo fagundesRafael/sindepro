@@ -339,7 +339,7 @@ export default function NoticiaDetalhada() {
                 {noticia.data ? new Date(noticia.data).toLocaleDateString('pt-BR', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' }) : 'Data indisponível'}
               </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">{noticia.titulo}</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-700 mb-3">{noticia.titulo}</h1>
             <p className="text-sm text-gray-600 mb-6">Por <span className="font-semibold">{noticia.autor || 'Autor desconhecido'}</span></p>
 
             {/* Descrição formatada */}

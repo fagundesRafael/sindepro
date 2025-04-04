@@ -49,6 +49,14 @@ userSchema.pre('save', async function(next) {
   }
 });
 
+// Middleware para garantir que isAdmin seja sempre false na criação
+userSchema.pre('save', function(next) {
+  if (this.isNew) {
+    this.isAdmin = false;
+  }
+  next();
+});
+
 // Método para comparar senhas
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.senha);

@@ -23,7 +23,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-xl font-bold mb-4">Redes Sociais</h3>
             <div className="flex gap-4 mb-4">
-              <Link href="https://www.facebook.com/profile.php?id=100008384590495" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
+              <Link href="https://www.facebook.com/profile.php?id=61558114495768" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
                 <Image 
                   src="/logos/logo-facebook.png" 
                   alt="Facebook" 
@@ -60,16 +60,16 @@ export default function Footer() {
               <Link href="/" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
                 Principal
               </Link>
-              <Link href="/diretoria" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
+              <Link href="/institucional/diretoria" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
                 Diretoria
               </Link>
-              <Link href="/sobre-nos" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
-                Sobre Nós
+              <Link href="/noticias" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
+                Notícias
               </Link>
-              <Link href="/convenios" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
+              <Link href="/institucional/convenios" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
                 Convênios
               </Link>
-              <Link href="/afilie-se-ja" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
+              <Link href="/filiacao" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
                 Afilie-se Já
               </Link>
               <Link href="/area-do-afiliado" className="hover:translate-x-2 transition-transform duration-300 hover:text-gray-200">
@@ -120,7 +120,8 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center text-sm opacity-80">
-          <p>©Copyright 2014 - Todos os Direitos Reservados ao Sindepro.com.br</p>
+          <p>© Copyright 2014 - Todos os Direitos Reservados ao Sindepro.com.br</p>
+        <span className="text-center text-white opacity-100 italic text-sm">created by: <a href="https://www.instagram.com/rafael.fagundes.9028/">fagundesrafael</a></span>
         </div>
       </div>
     </footer>

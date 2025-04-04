@@ -227,7 +227,7 @@ export default function Dashboard() {
       case 'noticias':
     return (
           <>
-            <div className="mb-4">
+            <div className="my-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Gerenciamento de publicações</h2>
               <button
                 onClick={() => setShowForm(!showForm)}
@@ -247,7 +247,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por título"
                       value={filters.titulo}
                       onChange={(e) => setFilters({...filters, titulo: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                     />
                   </div>
 
@@ -257,7 +257,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por descrição"
                       value={filters.descricao}
                       onChange={(e) => setFilters({...filters, descricao: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                     />
                   </div>
 
@@ -265,7 +265,7 @@ export default function Dashboard() {
                     <select
                       value={filters.categoria}
                       onChange={(e) => setFilters({...filters, categoria: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white text-black"
                     >
                       <option value="">Todas as categorias</option>
                       {categorias.map(cat => (
@@ -280,7 +280,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por autor"
                       value={filters.autor}
                       onChange={(e) => setFilters({...filters, autor: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                     />
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function Dashboard() {
 
             {/* Formulário */}
             {showForm && (
-              <form onSubmit={handleSubmit} className="mb-8 space-y-4 p-4 border rounded">
+              <form onSubmit={handleSubmit} className="mb-8 text-black space-y-4 p-4 border rounded">
                 <div>
                   <label className="block mb-1">Título*</label>
                   <input
@@ -459,7 +459,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold text-xl mb-2 line-clamp-2 hover:text-red-700 transition-colors">
+                      <h3 className="font-bold text-xl text-red-700 mb-2 line-clamp-2 hover:text-red-800 transition-colors">
                         {item.titulo}
                       </h3>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -563,7 +563,7 @@ export default function Dashboard() {
                   Anterior
                 </button>
 
-                <span className="px-4 py-2 text-sm text-gray-700">
+                <span className="px-4 mb-4 py-2 text-sm text-gray-700">
                   Página {currentPage} de {totalPages || 1}
                 </span>
 
@@ -598,13 +598,13 @@ export default function Dashboard() {
         );
       case 'destaques':
         return (
-          <div className="bg-white p-2 rounded-lg shadow-md">
+          <div className="bg-white p-2 my-4 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Configuração de destaques em geral</h2>
             
-            <form onSubmit={handleConfigSubmit} className="space-y-8">
+            <form onSubmit={handleConfigSubmit} className="text-black space-y-8">
               {/* Grupo 1 */}
               <div className="border p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-4">Notícias de linha</h3>
+                <h3 className="text-lg text-red-700 font-medium mb-4">Notícias de linha</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8'].map((field) => (
                     <div key={field}>
@@ -615,7 +615,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                       />
                     </div>
                   ))}
@@ -624,7 +624,7 @@ export default function Dashboard() {
 
               {/* Grupo 2 */}
               <div className="border p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-4">Notícias de <span className='text-red-700 underline'>slide</span> e <span className='text-red-700 underline'>colunas</span> existentes no carrossel</h3>
+                <h3 className="text-lg text-red-700 font-medium mb-4">Notícias de <span className='text-red-700 underline'>slide</span> e <span className='text-red-700 underline'>colunas</span> existentes no carrossel</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {['S1', 'S2', 'S3', 'C1', 'C2', 'C3', 'C4'].map((field) => (
                     <div key={field}>
@@ -635,7 +635,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                       />
                     </div>
                   ))}
@@ -644,7 +644,7 @@ export default function Dashboard() {
 
               {/* Grupo 3 */}
               <div className="border p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-4">Notícias em destaque</h3>
+                <h3 className="text-lg text-red-700 font-medium mb-4">Notícias em destaque</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {['D1', 'D2', 'D3', 'D4'].map((field) => (
                     <div key={field}>
@@ -655,7 +655,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                       />
                     </div>
                   ))}
@@ -664,7 +664,7 @@ export default function Dashboard() {
 
               {/* Grupo 4 */}
               <div className="border p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-4">Notícias dos próximos eventos</h3>
+                <h3 className="text-lg text-red-700 font-medium mb-4">Notícias dos próximos eventos</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {['E1', 'E2'].map((field) => (
                     <div key={field}>
@@ -675,7 +675,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
                       />
                     </div>
                   ))}
@@ -695,13 +695,12 @@ export default function Dashboard() {
         );
       case 'usuarios':
         return (
-          <div className="bg-white p-2 rounded-lg shadow-md">
+          <div className="bg-white my-4 p-2 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Listagem e gerenciamento de usuários</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matrícula</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
@@ -713,9 +712,6 @@ export default function Dashboard() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {users.map((user) => (
                     <tr key={user._id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
-                        {user._id}
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
                         {user.nome}
                       </td>
@@ -729,7 +725,7 @@ export default function Dashboard() {
                         <select
                           value={user.isActive ? 'true' : 'false'}
                           onChange={(e) => handleUpdateUserStatus(user._id, 'isActive', e.target.value === 'true')}
-                          className="text-sm border rounded p-1"
+                          className="text-sm border rounded p-1 text-black"
                         >
                           <option value="true">Sim</option>
                           <option value="false">Não</option>
@@ -739,7 +735,7 @@ export default function Dashboard() {
                         <select
                           value={user.isAdmin ? 'true' : 'false'}
                           onChange={(e) => handleUpdateUserStatus(user._id, 'isAdmin', e.target.value === 'true')}
-                          className="text-sm border rounded p-1"
+                          className="text-sm border rounded p-1 text-black"
                         >
                           <option value="true">Sim</option>
                           <option value="false">Não</option>
