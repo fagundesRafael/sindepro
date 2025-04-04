@@ -227,7 +227,7 @@ export default function Dashboard() {
       case 'noticias':
     return (
           <>
-            <div className="mb-8">
+            <div className="mb-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Gerenciamento de publicações</h2>
               <button
                 onClick={() => setShowForm(!showForm)}
@@ -239,15 +239,15 @@ export default function Dashboard() {
 
             {/* Filtros de Pesquisa */}
             <div className="mb-2">
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white rounded-lg shadow-md">
+                <div className="grid px-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="flex flex-col">
                     <input
                       type="text"
                       placeholder="Pesquisar por título"
                       value={filters.titulo}
                       onChange={(e) => setFilters({...filters, titulo: e.target.value})}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
 
@@ -257,7 +257,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por descrição"
                       value={filters.descricao}
                       onChange={(e) => setFilters({...filters, descricao: e.target.value})}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
 
@@ -265,7 +265,7 @@ export default function Dashboard() {
                     <select
                       value={filters.categoria}
                       onChange={(e) => setFilters({...filters, categoria: e.target.value})}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
                     >
                       <option value="">Todas as categorias</option>
                       {categorias.map(cat => (
@@ -280,7 +280,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por autor"
                       value={filters.autor}
                       onChange={(e) => setFilters({...filters, autor: e.target.value})}
-                      className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -615,7 +615,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       />
                     </div>
                   ))}
@@ -635,7 +635,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       />
                     </div>
                   ))}
@@ -655,7 +655,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       />
                     </div>
                   ))}
@@ -675,7 +675,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       />
                     </div>
                   ))}
@@ -778,10 +778,12 @@ export default function Dashboard() {
 
   return (
     <>
-      <SocialBar />
-      <Navbar />
+      <div className="-mx-[10%]">
+        <SocialBar />
+        <Navbar />
+      </div>
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-grow bg-white mt-2 rounded-lg bg-white mx-[10%]">
         {/* Título do Painel */}
         <div className="mb-2 flex ">
           <h1 className="text-3xl font-bold text-gray-800">Painel de Controle</h1>
@@ -832,6 +834,10 @@ export default function Dashboard() {
       </div>
       </main>
 
+      <div className="-mx-[10%]">
+        <Footer />
+      </div>
+
       <ConfirmationModal 
         isOpen={showDeleteModal}
         onClose={() => {
@@ -865,8 +871,6 @@ export default function Dashboard() {
         onClose={() => setShowSaveNotification(false)}
         message="Configurações salvas com sucesso!"
       />
-
-      <Footer />
     </>
     );
   }

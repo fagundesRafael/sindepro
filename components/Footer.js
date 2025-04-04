@@ -13,10 +13,6 @@ export default function Footer() {
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
         >
-          <path
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-            className="fill-gray-100"
-          ></path>
         </svg>
       </div>
 
@@ -27,7 +23,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-xl font-bold mb-4">Redes Sociais</h3>
             <div className="flex gap-4 mb-4">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
+              <Link href="https://www.facebook.com/profile.php?id=100008384590495" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
                 <Image 
                   src="/logos/logo-facebook.png" 
                   alt="Facebook" 
@@ -36,7 +32,7 @@ export default function Footer() {
                   className="hover:opacity-80 transition-opacity"
                 />
               </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
+              <Link href="https://www.instagram.com/sindeprooficial/" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform duration-300">
                 <Image 
                   src="/logos/logo-instagram.png" 
                   alt="Instagram" 

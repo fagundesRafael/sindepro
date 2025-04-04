@@ -62,7 +62,9 @@ export default function Navbar() {
               />
             </Link>
             <div className="flex flex-col ml-2 justify-center items-center">
-              <h1 className="text-[4rem] text-red-700 font-bold leading-[0.9]">SINDEPRO</h1>
+              <Link href="/">
+                <h1 className="text-[4rem] text-red-700 font-bold leading-[0.9] hover:text-red-800 transition-colors">SINDEPRO</h1>
+              </Link>
               <p className="text-[9px] text-slate-900 font-bold mt-[-5px]">SINDICATO DOS DELEGADOS DE POLÍCIA CIVIL DO ESTADO DE RONDÔNIA</p>
             </div>
           </div>

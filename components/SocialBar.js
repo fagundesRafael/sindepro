@@ -11,10 +11,10 @@ export default function SocialBar() {
           <NewsEvents />
         </div>
         <div className="flex space-x-3 ml-4">
-          <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+          <Link href="https://www.facebook.com/profile.php?id=100008384590495" target="_blank" rel="noopener noreferrer">
             <FaFacebook />
           </Link>
-          <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+          <Link href="https://www.instagram.com/sindeprooficial/" target="_blank" rel="noopener noreferrer">
             <FaInstagram />
           </Link>
           <Link href="https://whatsapp.com" target="_blank" rel="noopener noreferrer">

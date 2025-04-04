@@ -80,10 +80,14 @@ export default function TodasNoticias() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SocialBar />
-      <Navbar />
+      {/* Componentes que ocupam a largura total */}
+      <div className="-mx-[10%]">
+        <SocialBar />
+        <Navbar />
+      </div>
 
-      <main className="flex-grow bg-gray-50">
+      {/* Conteúdo principal - com margens */}
+      <main className="flex-grow bg-white mt-2 rounded-lg bg-white mx-[10%]">
         <div className="container mx-auto px-4 py-8">
 
           {/* Filtros */}
@@ -230,7 +234,10 @@ export default function TodasNoticias() {
         </div>
       </main>
 
-      <Footer />
+      {/* Footer ocupando a largura total */}
+      <div className="-mx-[10%]">
+        <Footer />
+      </div>
     </div>
   );
 } 

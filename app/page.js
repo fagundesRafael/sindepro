@@ -78,15 +78,15 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Barra superior com redes sociais */}
-      <SocialBar />
-
-      {/* Navbar */}
-      <Navbar />
+    <div className="min-h-screen flex flex-col ">
+      {/* Componentes que ocupam a largura total */}
+      <div className="-mx-[10%]">
+        <SocialBar />
+        <Navbar />
+      </div>
 
       {/* Banner principal com carrossel e cards laterais */}
-      <div className="py-6 bg-gray-100">
+      <div className="py-6 bg-gray-100 mx-[10%] rounded mt-4 ">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Carrossel ocupando 60% do espaço */}
@@ -138,9 +138,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Conteúdo principal */}
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 py-12">
+      {/* Conteúdo principal - com margens */}
+      <main className="flex-grow mx-[10%]">
+        <div className="container mx-auto px-4 py-12 bg-white">
           {/* Seção de notícias em destaque */}
           <section>
             <div className="flex justify-between items-center mb-6">
@@ -248,7 +248,7 @@ export default function Home() {
                     style={{objectFit: "cover"}}
                     unoptimized={true}
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-opacity-50 flex items-center justify-center">
                     <h3 className="text-white text-2xl font-bold">Institucional</h3>
                   </div>
                 </div>
@@ -282,7 +282,7 @@ export default function Home() {
                     style={{objectFit: "cover"}}
                     unoptimized={true}
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-red- bg-opacity-50 flex items-center justify-center">
                     <h3 className="text-white text-2xl font-bold">Galeria</h3>
                   </div>
                 </div>
@@ -344,8 +344,10 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer ocupando a largura total */}
+      <div className="-mx-[10%]">
+        <Footer />
+      </div>
     </div>
   );
 }

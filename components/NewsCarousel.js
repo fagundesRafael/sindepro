@@ -166,7 +166,7 @@ export default function NewsCarousel() {
             style={{objectFit: "cover"}}
           />
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <p className="text-white text-xl">Insira mais notícias</p>
+            <p className="text-white text-xl">Carregando notícias...</p>
           </div>
         </div>
       )}

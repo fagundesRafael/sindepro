@@ -240,12 +240,16 @@ export default function NoticiaDetalhada() {
   if (status === 'loading' || loadingNoticia) {
     return (
       <div className="min-h-screen flex flex-col">
-        <SocialBar />
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8 flex justify-center items-center">
-          <p>Carregando...</p> {/* Mensagem de loading genérica */}
+        <div className="-mx-[10%]">
+          <SocialBar />
+          <Navbar />
+        </div>
+        <main className="flex-grow container mx-auto px-4 py-8 flex justify-center items-center mx-[10%]">
+          <p>Carregando...</p>
         </main>
-        <Footer />
+        <div className="-mx-[10%]">
+          <Footer />
+        </div>
       </div>
     );
   }
@@ -254,9 +258,11 @@ export default function NoticiaDetalhada() {
    if (!noticia) {
      return (
        <div className="min-h-screen flex flex-col">
-         <SocialBar />
-         <Navbar />
-         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col justify-center items-center">
+         <div className="-mx-[10%]">
+           <SocialBar />
+           <Navbar />
+         </div>
+         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col justify-center items-center mx-[10%]">
            <p className="text-red-600 text-xl mb-4">{mensagemGeral.texto || 'Não foi possível carregar a notícia ou o ID é inválido.'}</p>
            <button
              onClick={() => router.back()}
@@ -265,18 +271,22 @@ export default function NoticiaDetalhada() {
              Voltar
            </button>
          </main>
-         <Footer />
+         <div className="-mx-[10%]">
+           <Footer />
+         </div>
        </div>
      );
    }
 
   // Renderização Principal (Notícia Carregada)
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <SocialBar />
-      <Navbar />
+    <div className="min-h-screen flex flex-col bg-white">
+      <div className="-mx-[10%]">
+        <SocialBar />
+        <Navbar />
+      </div>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow mt-2 rounded-lg bg-white mx-[10%]">
         {/* Mensagem de Feedback Geral (Topo) */}
         {mensagemGeral.texto && (
              <div className={`fixed top-20 right-4 p-4 rounded-lg shadow-lg z-50 ${
@@ -430,7 +440,9 @@ export default function NoticiaDetalhada() {
         </article> {/* Fim do Article da Notícia */}
       </main>
 
-      <Footer />
+      <div className="-mx-[10%]">
+        <Footer />
+      </div>
     </div>
   );
 }
