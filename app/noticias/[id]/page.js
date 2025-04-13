@@ -286,15 +286,15 @@ export default function NoticiaDetalhada() {
         <Navbar />
       </div>
 
-      <main className="flex-grow mt-2 rounded-lg bg-white mx-[10%]">
+      <main className="flex-grow mt-2 rounded-lg bg-white mx-[10%] p-4 sm:p-6 lg:p-8"> {/* Added padding here */}
         {/* Mensagem de Feedback Geral (Topo) */}
         {mensagemGeral.texto && (
-             <div className={`fixed top-20 right-4 p-4 rounded-lg shadow-lg z-50 ${
-               mensagemGeral.tipo === 'sucesso' ? 'bg-green-500' : 'bg-red-500'
-             } text-white transition-opacity duration-500`} role="alert">
-               {mensagemGeral.texto}
-             </div>
-           )}
+           <div className={`fixed top-20 right-4 p-4 rounded-lg shadow-lg z-50 ${
+             mensagemGeral.tipo === 'sucesso' ? 'bg-green-500' : 'bg-red-500'
+           } text-white transition-opacity duration-500`} role="alert">
+             {mensagemGeral.texto}
+           </div>
+         )}
 
         {/* Notificação de Autenticação/Autorização (Inferior Esquerdo) */}
         <AuthNotification
@@ -317,126 +317,134 @@ export default function NoticiaDetalhada() {
 
         {/* Conteúdo da Notícia */}
         <article className="bg-white rounded-lg shadow-lg overflow-hidden mb-12">
-          {/* Imagem */}
-          <div className="relative h-64 sm:h-80 md:h-96 w-full">
-            <Image
-              src={noticia.imagem || '/general/no-image.jpg'}
-              alt={noticia.titulo || 'Imagem da notícia'}
-              fill
-              className="object-cover" // Garante que a imagem cubra a área
-              unoptimized={true} // Desativa otimização do Next.js se usar URLs externas ou Cloudinary free
-              priority // Carrega a imagem principal com prioridade
-            />
+          {/* Container Flex para layout de 2 colunas (Imagem | Texto) em telas médias e maiores */}
+          <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
+
+            {/* Coluna da Esquerda: Imagem */}
+            <div className="w-full md:w-1/2">
+              <div className="relative w-full"> {/* Container para aspect ratio */}
+                <Image
+                  src={noticia.imagem || '/general/no-image.jpg'}
+                  alt={noticia.titulo || 'Imagem da notícia'}
+                  width={1600} // Largura base para cálculo da proporção (ex: 16:9)
+                  height={900} // Altura base para cálculo da proporção (ex: 16:9)
+                  sizes="(max-width: 768px) 100vw, 50vw" // 100% em telas pequenas, 50% em médias+
+                  style={{ width: '100%', height: 'auto', objectFit: 'cover' }} // Faz a imagem ocupar 100% da coluna e manter proporção
+                  unoptimized={true} // Desativa otimização do Next.js se usar URLs externas ou Cloudinary free
+                  priority // Carrega a imagem principal com prioridade
+                />
+              </div>
+            </div>
+
+            {/* Coluna da Direita: Detalhes e Conteúdo */}
+            <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8"> {/* Adicionado padding aqui */}
+              <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
+                <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                  {noticia.categoria}
+                </span>
+                <div className="text-gray-500 text-xs sm:text-sm">
+                  {noticia.data ? new Date(noticia.data).toLocaleDateString('pt-BR', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' }) : 'Data indisponível'}
+                </div>
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-700 mb-3">{noticia.titulo}</h1>
+              <p className="text-sm text-gray-600 mb-6">Por <span className="font-semibold">{noticia.autor || 'Autor desconhecido'}</span></p>
+
+              {/* Descrição formatada */}
+              <div className="prose prose-sm sm:prose-base max-w-none text-gray-800 leading-relaxed">
+                {/* Renderiza parágrafos a partir de quebras de linha */}
+                {noticia.descricao?.split('\n').map((paragrafo, index) => (
+                  paragrafo.trim() ? <p key={index}>{paragrafo}</p> : null // Ignora linhas vazias
+                ))}
+              </div>
+            </div>
+          </div> {/* Fim do container flex md:flex-row */}
+
+          {/* Seção de Curtidas - Fora do flex-row, aparece abaixo */}
+           <div className="flex items-center gap-4 p-4 sm:p-6 lg:p-8 border-t"> {/* Adicionado padding e border-t aqui */}
+             <h2 className="text-lg font-semibold text-gray-800 mr-4">Gostou?</h2>
+            <button
+              onClick={handleCurtir}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ease-in-out text-sm ${
+                jaCurtiu
+                ? 'bg-red-600 hover:bg-red-700 text-white ring-2 ring-offset-2 ring-red-600' // Estilo quando curtido
+                : 'bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-700 ring-1 ring-gray-200 hover:ring-red-200' // Estilo quando não curtido
+              } ${status !== 'authenticated' ? 'opacity-60 cursor-not-allowed' : ''}`} // Desabilitado visualmente se não logado
+              aria-pressed={jaCurtiu}
+              disabled={status !== 'authenticated'} // Desabilita se não logado
+              title={status !== 'authenticated' ? 'Faça login para curtir' : (jaCurtiu ? 'Descurtir' : 'Curtir')}
+            >
+              <svg className={`w-5 h-5 transition-colors ${jaCurtiu ? 'text-white' : 'text-red-500'}`} // Cor do coração
+                   fill={jaCurtiu ? "currentColor" : "none"}
+                   stroke="currentColor"
+                   viewBox="0 0 24 24"
+                   aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span className="font-medium">{curtidas}</span>
+              <span className="hidden sm:inline">{curtidas === 1 ? 'Curtida' : 'Curtidas'}</span>
+            </button>
           </div>
 
-          {/* Detalhes e Conteúdo */}
-          <div className="p-4 sm:p-6 lg:p-8">
-            <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
-              <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                {noticia.categoria}
-              </span>
-              <div className="text-gray-500 text-xs sm:text-sm">
-                {noticia.data ? new Date(noticia.data).toLocaleDateString('pt-BR', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' }) : 'Data indisponível'}
-              </div>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-700 mb-3">{noticia.titulo}</h1>
-            <p className="text-sm text-gray-600 mb-6">Por <span className="font-semibold">{noticia.autor || 'Autor desconhecido'}</span></p>
+          {/* Seção de Comentários - Fora do flex-row, aparece abaixo */}
+          <div className="p-4 sm:p-6 lg:p-8 border-t"> {/* Adicionado padding e border-t aqui */}
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Comentários ({comentarios.length})</h2>
 
-            {/* Descrição formatada */}
-            <div className="prose prose-sm sm:prose-base max-w-none text-gray-800 leading-relaxed mb-8">
-              {/* Renderiza parágrafos a partir de quebras de linha */}
-              {noticia.descricao?.split('\n').map((paragrafo, index) => (
-                paragrafo.trim() ? <p key={index}>{paragrafo}</p> : null // Ignora linhas vazias
-              ))}
-            </div>
+            {/* Formulário de Comentário ou Mensagem */}
+            {status === 'authenticated' ? ( // Verifica se está logado
+              session.user?.isActive ? ( // Se logado, verifica se está ATIVO
+                <form onSubmit={handleComentario} className="mb-8">
+                  <label htmlFor="comentario-texto" className="sr-only">Seu comentário</label>
+                  <textarea
+                    id="comentario-texto"
+                    value={comentario}
+                    onChange={(e) => setComentario(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                    rows="4"
+                    placeholder="Escreva seu comentário aqui..."
+                    required
+                    aria-label="Campo para escrever comentário"
+                  />
+                  <button
+                    type="submit"
+                    className="mt-3 px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!comentario.trim() || status !== 'authenticated'} // Dupla verificação
+                  >
+                    Enviar Comentário
+                  </button>
+                </form>
+              ) : ( // Logado, mas INATIVO
+                <div className="mb-8 text-yellow-800 bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-sm" role="alert">
+                  <p><span className="font-semibold">Atenção:</span> Sua conta está pendente de ativação pelo administrador. Você não pode comentar ou curtir no momento.</p>
+                </div>
+              )
+            ) : ( // NÃO está logado
+              <p className="mb-8 text-gray-600 text-sm">
+                Você precisa <Link href="/login" className="text-red-700 hover:underline font-medium">fazer login</Link> para comentar ou curtir.
+              </p>
+            )}
 
-            {/* Seção de Curtidas */}
-            <div className="flex items-center gap-4 mb-8 border-t pt-6">
-               <h2 className="text-lg font-semibold text-gray-800 mr-4">Gostou?</h2>
-              <button
-                onClick={handleCurtir}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ease-in-out text-sm ${
-                  jaCurtiu
-                  ? 'bg-red-600 hover:bg-red-700 text-white ring-2 ring-offset-2 ring-red-600' // Estilo quando curtido
-                  : 'bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-700 ring-1 ring-gray-200 hover:ring-red-200' // Estilo quando não curtido
-                } ${status !== 'authenticated' ? 'opacity-60 cursor-not-allowed' : ''}`} // Desabilitado visualmente se não logado
-                aria-pressed={jaCurtiu}
-                disabled={status !== 'authenticated'} // Desabilita se não logado
-                title={status !== 'authenticated' ? 'Faça login para curtir' : (jaCurtiu ? 'Descurtir' : 'Curtir')}
-              >
-                <svg className={`w-5 h-5 transition-colors ${jaCurtiu ? 'text-white' : 'text-red-500'}`} // Cor do coração
-                     fill={jaCurtiu ? "currentColor" : "none"}
-                     stroke="currentColor"
-                     viewBox="0 0 24 24"
-                     aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                <span className="font-medium">{curtidas}</span>
-                <span className="hidden sm:inline">{curtidas === 1 ? 'Curtida' : 'Curtidas'}</span>
-              </button>
-            </div>
-
-            {/* Seção de Comentários */}
-            <div className="border-t pt-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Comentários ({comentarios.length})</h2>
-
-              {/* Formulário de Comentário ou Mensagem */}
-              {status === 'authenticated' ? ( // Verifica se está logado
-                session.user?.isActive ? ( // Se logado, verifica se está ATIVO
-                  <form onSubmit={handleComentario} className="mb-8">
-                    <label htmlFor="comentario-texto" className="sr-only">Seu comentário</label>
-                    <textarea
-                      id="comentario-texto"
-                      value={comentario}
-                      onChange={(e) => setComentario(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                      rows="4"
-                      placeholder="Escreva seu comentário aqui..."
-                      required
-                      aria-label="Campo para escrever comentário"
-                    />
-                    <button
-                      type="submit"
-                      className="mt-3 px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={!comentario.trim() || status !== 'authenticated'} // Dupla verificação
-                    >
-                      Enviar Comentário
-                    </button>
-                  </form>
-                ) : ( // Logado, mas INATIVO
-                  <div className="mb-8 text-yellow-800 bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-sm" role="alert">
-                    <p><span className="font-semibold">Atenção:</span> Sua conta está pendente de ativação pelo administrador. Você não pode comentar ou curtir no momento.</p>
-                  </div>
-                )
-              ) : ( // NÃO está logado
-                <p className="mb-8 text-gray-600 text-sm">
-                  Você precisa <Link href="/login" className="text-red-700 hover:underline font-medium">fazer login</Link> para comentar ou curtir.
-                </p>
-              )}
-
-              {/* Lista de Comentários */}
-              <div className="space-y-6">
-                {loadingComentarios ? (
-                   <p className="text-gray-500">Carregando comentários...</p>
-                ) : comentarios.length > 0 ? (
-                  comentarios.map((comentario) => (
-                    <div key={comentario._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                      <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-                        <span className="font-semibold text-gray-800 text-sm">{comentario.autor || 'Usuário'}</span>
-                        <span className="text-xs text-gray-500">
-                          {comentario.data ? new Date(comentario.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
-                        </span>
-                      </div>
-                      {/* Usa 'whitespace-pre-wrap' para respeitar quebras de linha e espaços */}
-                      <p className="text-gray-700 text-sm whitespace-pre-wrap">{comentario.texto}</p>
+            {/* Lista de Comentários */}
+            <div className="space-y-6">
+              {loadingComentarios ? (
+                 <p className="text-gray-500">Carregando comentários...</p>
+              ) : comentarios.length > 0 ? (
+                comentarios.map((comentario) => (
+                  <div key={comentario._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                      <span className="font-semibold text-gray-800 text-sm">{comentario.autor || 'Usuário'}</span>
+                      <span className="text-xs text-gray-500">
+                        {comentario.data ? new Date(comentario.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
+                      </span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-sm">Ainda não há comentários. Seja o primeiro!</p>
-                )}
-              </div>
-            </div> {/* Fim da Seção de Comentários */}
-          </div> {/* Fim do Padding Principal */}
+                    {/* Usa 'whitespace-pre-wrap' para respeitar quebras de linha e espaços */}
+                    <p className="text-gray-700 text-sm whitespace-pre-wrap">{comentario.texto}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">Ainda não há comentários. Seja o primeiro!</p>
+              )}
+            </div>
+          </div> {/* Fim da Seção de Comentários */}
         </article> {/* Fim do Article da Notícia */}
       </main>
 
