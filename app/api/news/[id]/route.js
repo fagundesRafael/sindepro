@@ -1,6 +1,6 @@
 //app/api/news/[id]/route.js
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import News from '@/models/News';
 
 export async function DELETE(request, { params }) {

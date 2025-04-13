@@ -1,7 +1,7 @@
 // app/api/comentarios/[id]/route.js
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { connectDB } from '@/lib/mongodb'; // Certifique-se que este é o caminho correto para sua conexão
+import connectDB from '@/lib/mongodb'; // Certifique-se que este é o caminho correto para sua conexão
 import Comentario from '@/models/Comentario'; // Certifique-se que este é o caminho correto para seu modelo
 
 // ***** IMPORTAÇÃO NECESSÁRIA *****

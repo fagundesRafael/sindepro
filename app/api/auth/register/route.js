@@ -1,5 +1,5 @@
 //app/api/auth/register/route.js
-import { connectDB } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { NextResponse } from 'next/server';
 

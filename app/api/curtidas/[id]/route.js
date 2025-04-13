@@ -1,89 +1,53 @@
-// app/api/curtidas/[id]/route.js
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { connectDB } from '@/lib/mongodb'; 
+// app/api/curtidas/[id]/route.js  <-- ROTA CORRETA PARA POST (TOGGLE)
+import connectDB from '@/lib/mongodb';
 import Curtida from '@/models/Curtida';
-// import News from '@/models/News'; // Descomente se for atualizar contador no modelo News
+import Noticia from '@/models/News';
+import { NextResponse } from 'next/server';
+import mongoose from 'mongoose';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getServerSession } from "next-auth/next";
 
-// ***** 1. Importar authOptions *****
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Ajuste o caminho se necessário
+// Handler GET para esta rota (se precisar de algo aqui, como buscar a notícia)
+// export async function GET(request, { params }) { ... }
 
-export async function POST(request, { params }) { // params é uma Promise
-  let noticiaId; // Para log no catch
-
-  try {
-    // ***** 2. Obter sessão CORRETAMENTE *****
+// Handler POST para curtir/descurtir
+export async function POST(request, { params }) {
+    const { id: noticiaId } = params;
     const session = await getServerSession(authOptions);
 
-    // Verifica se está logado
-    if (!session || !session.user) {
-      console.log(`Tentativa de curtir bloqueada: Usuário não autenticado.`);
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    if (!session || !session.user || !session.user.id) {
+        return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
+    const userId = session.user.id;
 
-    // ***** 3. Verificar se usuário está ATIVO *****
     if (!session.user.isActive) {
-       console.log(`Tentativa de curtir bloqueada: Usuário ${session.user.id} INATIVO.`);
-       return NextResponse.json({ error: 'Sua conta está inativa. Não é possível curtir.' }, { status: 403 });
+        return NextResponse.json({ error: 'Conta inativa, não pode curtir ou descurtir.' }, { status: 403 });
     }
 
-    // ***** 4. Obter noticiaId CORRETAMENTE *****
-    const resolvedParams = await params;
-    noticiaId = resolvedParams.id; // Usa o ID resolvido
-
-    // Verifica ID da notícia
-    if (!noticiaId) {
-       console.error("ID da notícia não encontrado nos parâmetros resolvidos (curtidas POST):", resolvedParams);
-       return NextResponse.json({ error: 'ID da notícia ausente nos parâmetros' }, { status: 400 });
+    if (!noticiaId || !mongoose.Types.ObjectId.isValid(noticiaId)) {
+        return NextResponse.json({ error: 'ID da notícia inválido' }, { status: 400 });
     }
 
-    // Se chegou aqui, usuário está logado, ativo e temos noticiaId.
-    const userId = session.user.id; // Pega ID do usuário da sessão CORRETA
+    try {
+        await connectDB();
+        const curtidaExistente = await Curtida.findOne({ noticiaId: noticiaId, userId: userId });
+        let curtiu = false;
 
-    await connectDB(); // Conecta ao DB
+        if (curtidaExistente) {
+            await Curtida.findByIdAndDelete(curtidaExistente._id);
+            curtiu = false;
+        } else {
+            await Curtida.create({ noticiaId: noticiaId, userId: userId });
+            curtiu = true;
+        }
 
-    let jaCurtiuAntes = false; // Flag para saber o estado antes da ação
+        const totalCurtidas = await Curtida.countDocuments({ noticiaId: noticiaId });
+        await Noticia.findByIdAndUpdate(noticiaId, { curtidas: totalCurtidas });
 
-    // Verifica se já existe uma curtida com os campos corretos do Schema
-    const curtidaExistente = await Curtida.findOne({
-      noticia: noticiaId, // Nome do campo no Schema Curtida
-      usuario: userId     // Nome do campo no Schema Curtida
-    });
+        return NextResponse.json({ totalCurtidas, curtiu }); // Retorna estado atualizado
 
-    if (curtidaExistente) {
-      // Já curtiu -> Remover a curtida (Descurtir)
-      await Curtida.deleteOne({ _id: curtidaExistente._id });
-      console.log(`Usuário ${userId} DESCURTIU notícia ${noticiaId}`);
-      jaCurtiuAntes = true;
-    } else {
-      // Não curtiu -> Adicionar a curtida (Curtir)
-      await Curtida.create({ // Usando create para simplificar
-        noticia: noticiaId,
-        usuario: userId
-      });
-      console.log(`Usuário ${userId} CURTIU notícia ${noticiaId}`);
-      jaCurtiuAntes = false;
+    } catch (error) {
+        console.error(`Erro POST /api/curtidas/${noticiaId}:`, error);
+        return NextResponse.json({ error: 'Erro interno ao processar a curtida' }, { status: 500 });
     }
-
-    // Recalcular o total de curtidas para essa notícia
-    const totalCurtidas = await Curtida.countDocuments({ noticia: noticiaId });
-
-    // Opcional: Atualizar um campo 'curtidas' no documento da Notícia
-    // await News.findByIdAndUpdate(noticiaId, { $set: { curtidas: totalCurtidas } });
-    // (Seu modelo 'News' precisaria ter um campo 'curtidas: Number')
-
-    // Retorna o NOVO estado da curtida (se curtiu ou descurtiu) e o total
-    return NextResponse.json({
-      curtiu: !jaCurtiuAntes, // O novo estado é o oposto do que era antes
-      totalCurtidas
-    });
-
-  } catch (error) {
-    console.error(`Erro na rota POST /api/curtidas/${noticiaId || '[ID não resolvido]'}:`, error);
-    // Retorna erro genérico (o frontend pode tratar a mensagem específica se o status for 403)
-    return NextResponse.json({ error: 'Erro ao processar curtida' }, { status: 500 });
-  }
 }
-
-// Você pode adicionar outros métodos (GET, DELETE) aqui se necessário,
-// lembrando de aplicar a lógica 'await params' se eles usarem o ID da rota.

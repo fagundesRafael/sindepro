@@ -247,7 +247,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por título"
                       value={filters.titulo}
                       onChange={(e) => setFilters({...filters, titulo: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                     />
                   </div>
 
@@ -257,7 +257,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por descrição"
                       value={filters.descricao}
                       onChange={(e) => setFilters({...filters, descricao: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                     />
                   </div>
 
@@ -280,7 +280,7 @@ export default function Dashboard() {
                       placeholder="Pesquisar por autor"
                       value={filters.autor}
                       onChange={(e) => setFilters({...filters, autor: e.target.value})}
-                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                      className="border border-gray-500 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                     />
                   </div>
                 </div>
@@ -615,7 +615,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                       />
                     </div>
                   ))}
@@ -635,7 +635,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                       />
                     </div>
                   ))}
@@ -655,7 +655,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                       />
                     </div>
                   ))}
@@ -675,7 +675,7 @@ export default function Dashboard() {
                         type="text"
                         value={configs[field] || ''}
                         onChange={(e) => setConfigs({...configs, [field]: e.target.value})}
-                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-black"
+                        className="w-full border border-gray-300 rounded-md mb-2 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-800 placeholder-slate-500"
                       />
                     </div>
                   ))}

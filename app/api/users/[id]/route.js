@@ -1,6 +1,6 @@
 //app/api/users/[id]/route.js
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
 export async function PUT(request, { params }) {

@@ -1,5 +1,7 @@
-//app/institucional/convenios/page.js
+// app/institucional/convenios/page.js
 "use client";
+
+import { useState, useEffect } from 'react'; // Import hooks
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from '@/components/Navbar';
@@ -8,75 +10,149 @@ import Footer from '@/components/Footer';
 import OfflineNotice from '@/components/OfflineNotice';
 
 export default function Convenios() {
-  // Array de convênios
-  const convenios = [
-    { id: 1, nome: "Colégio Cristão", imagem: "https://source.unsplash.com/random/300x200?school" },
-    { id: 2, nome: "DYNAMUS", imagem: "https://source.unsplash.com/random/300x200?fitness" },
-    { id: 3, nome: "Faculdade São Lucas", imagem: "https://source.unsplash.com/random/300x200?university" },
-    { id: 4, nome: "Faro", imagem: "https://source.unsplash.com/random/300x200?college" },
-    { id: 5, nome: "Fatec", imagem: "https://source.unsplash.com/random/300x200?technology" },
-    { id: 6, nome: "Ulbra", imagem: "https://source.unsplash.com/random/300x200?education" },
-    { id: 7, nome: "Unimed", imagem: "https://source.unsplash.com/random/300x200?health" },
-    { id: 8, nome: "Uniodonto", imagem: "https://source.unsplash.com/random/300x200?dental" },
-    { id: 9, nome: "Unipec", imagem: "https://source.unsplash.com/random/300x200?institute" },
-    { id: 10, nome: "Uniron", imagem: "https://source.unsplash.com/random/300x200?academy" }
-  ];
+    // Estado para armazenar as notícias da categoria "Convênios"
+    const [conveniosNoticias, setConveniosNoticias] = useState([]);
+    // Estado para controle de carregamento
+    const [loading, setLoading] = useState(true);
+    // Estado para paginação
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const noticiasPerPage = 12; // Quantidade de convênios por página
+
+    // Hook para buscar as notícias da categoria "Convênios"
+    useEffect(() => {
+        const fetchConvenios = async () => {
+            setLoading(true);
+            try {
+                // Constrói os parâmetros da query para a API
+                const params = new URLSearchParams({
+                    page: currentPage.toString(),
+                    limit: noticiasPerPage.toString(),
+                    categoria: 'Convênios', // Filtra especificamente pela categoria
+                });
+
+                // Faz a requisição para a API de notícias
+                const response = await fetch(`/api/news?${params.toString()}`);
+                if (!response.ok) {
+                    throw new Error('Falha ao buscar notícias de convênios');
+                }
+                const data = await response.json();
+                setConveniosNoticias(data.news || []); // Armazena as notícias encontradas
+                setTotalPages(data.totalPages || 0); // Armazena o total de páginas
+
+            } catch (error) {
+                console.error("Erro ao buscar convênios:", error);
+                setConveniosNoticias([]); // Limpa em caso de erro
+                setTotalPages(0);
+            } finally {
+                setLoading(false); // Finaliza o estado de carregamento
+            }
+        };
+
+        fetchConvenios();
+    }, [currentPage]); // Re-executa quando a página atual mudar
+
+    // Função para mudar de página
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+
 
     return (
-    <div className="min-h-screen flex flex-col">
-      <div className="-mx-[10%]">
-        <SocialBar />
-        <Navbar />
-      </div>
-      
-      <main className="flex-grow mx-[10%] py-8">
-        <div className="container mx-auto px-4">
-          {/* Cabeçalho da página */}
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">CONVÊNIOS SINDEPRO</h1>
-          
-          {/* Descrição */}
-          <p className="text-center text-gray-600 mb-6 max-w-3xl mx-auto">
-            O SINDEPRO tem orgulho de oferecer aos seus associados parcerias exclusivas 
-            com diversas instituições de qualidade. Conheça nossos convênios abaixo.
-          </p>
-          
-          {/* Grid de convênios */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {convenios.map((convenio) => (
-              <Link 
-                key={convenio.id} 
-                href="/"
-                className="transition-all duration-300 hover:scale-105 group"
-              >
-                <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">
-                  <div className="relative h-48">
-                    <Image 
-                      src={convenio.imagem}
-                      alt={`Logo ${convenio.nome}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      style={{ objectFit: "cover" }}
-                      className="transition-transform duration-300 group-hover:scale-110"
-                      unoptimized={true}
-                    />
-                    {/* Overlay no hover */}
-                    <div className="absolute inset-0 bg-red-700 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                  </div>
-                  <div className="p-4 text-center">
-                    <h2 className="font-bold text-lg text-gray-800 group-hover:text-red-700 transition-colors duration-300">{convenio.nome}</h2>
-                    <p className="text-xs text-gray-500 mt-2 group-hover:text-red-600 transition-colors duration-300">Clique para mais informações</p>
-                  </div>
+        <div className="min-h-screen flex flex-col">
+            <div className="-mx-[10%]">
+                <SocialBar />
+                <Navbar />
+            </div>
+
+            <main className="flex-grow mx-[10%] py-8">
+                <div className="container mx-auto px-4">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">CONVÊNIOS SINDEPRO</h1>
+                    <p className="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
+                        O SINDEPRO tem orgulho de oferecer aos seus associados parcerias exclusivas
+                        com diversas instituições de qualidade. Conheça nossos convênios abaixo.
+                    </p>
+                    {loading ? (
+                        <div className="text-center py-10 text-gray-500">Carregando convênios...</div>
+                    ) : conveniosNoticias.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {conveniosNoticias.map((noticia) => (
+                                <Link
+                                    key={noticia._id} 
+                                    href={`/noticias/${noticia._id}`} 
+                                    className="transition-all duration-300 hover:scale-105 group"
+                                >
+                                    <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col"> 
+                                        <div className="relative h-48 flex-shrink-0"> 
+                                            <Image
+                                                src={noticia.imagem || '/general/no-image.jpg'} // Imagem da notícia
+                                                alt={noticia.titulo} // Usa o título como alt text
+                                                fill
+                                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" // Ajuste sizes conforme layout
+                                                style={{ objectFit: "cover" }}
+                                                className="transition-transform duration-300 group-hover:scale-110"
+                                                // unoptimized={true} // Remova se possível para otimização
+                                            />
+                                            {/* Overlay no hover */}
+                                        </div>
+                                        <div className="p-4 text-center mt-auto"> {/* mt-auto para empurrar para baixo se houver espaço */}
+                                            <h2 className="font-bold text-lg text-gray-800 group-hover:text-red-700 transition-colors duration-300 line-clamp-2">
+                                                {noticia.titulo} {/* Título da notícia */}
+                                            </h2>
+                                             {/* Removido o <p> "Clique para mais informações" */}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        // Mensagem se nenhum convênio for encontrado
+                         <div className="text-center py-10 text-gray-500">Nenhum convênio encontrado.</div>
+                    )}
+
+                    {/* Controles de Paginação */}
+                    {!loading && totalPages > 1 && (
+                        <div className="mt-12 flex justify-center items-center space-x-2">
+                            {/* Botão Anterior */}
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center gap-2 ${currentPage === 1
+                                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                    : 'bg-red-700 text-white hover:bg-red-800'
+                                    }`}
+                            >
+                                Anterior
+                            </button>
+
+                            {/* Indicador de Página */}
+                            <span className="text-sm text-gray-700">
+                                Página {currentPage} de {totalPages}
+                            </span>
+
+                            {/* Botão Próxima */}
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center gap-2 ${currentPage === totalPages
+                                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                    : 'bg-red-700 text-white hover:bg-red-800'
+                                    }`}
+                            >
+                                Próxima
+                            </button>
+                        </div>
+                    )}
+
                 </div>
-              </Link>
-            ))}
-          </div>
+            </main>
+
+            <div className="-mx-[10%]">
+                <Footer />
+            </div>
+            <OfflineNotice />
         </div>
-      </main>
-      
-      <div className="-mx-[10%]">
-        <Footer />
-      </div>
-      <OfflineNotice />
-      </div>
     );
-  }
+}
