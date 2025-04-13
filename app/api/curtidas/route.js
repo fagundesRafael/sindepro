@@ -1,5 +1,5 @@
 //app/api/curtidas/route.js
-import { connectDB } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import Curtida from '@/models/Curtida';
 import Noticia from '@/models/News';
 

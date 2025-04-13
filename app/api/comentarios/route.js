@@ -1,5 +1,5 @@
 //app/api/comentarios/route.js
-import { connectDB } from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import Comentario from '@/models/Comentario';
 
 export async function POST(request) {

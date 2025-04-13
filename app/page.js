@@ -1,4 +1,5 @@
 // app/page.js
+export const dynamic = 'force-dynamic';
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
@@ -9,7 +10,7 @@ import NewsCarousel from "../components/NewsCarousel";
 async function fetchNewsByIds(ids) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; 
   const newsPromises = ids
-    .filter(Boolean) // Garante que não há IDs nulos/undefined
+    .filter(Boolean) 
     .map(
       (id) =>
         fetch(`${baseUrl}/api/news/${id}`, { cache: "no-store" }) 
@@ -20,7 +21,6 @@ async function fetchNewsByIds(ids) {
   return results.filter(Boolean); 
 }
 
-// Função auxiliar para formatar dados do card (pode ser movida para utils)
 function formatCardData(news) {
   return news
     ? {
@@ -30,12 +30,12 @@ function formatCardData(news) {
         imagem: news.imagem || "/general/no-image.jpg",
         data: news.data
           ? new Date(news.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })
-          : "", // Adiciona timeZone se necessário
+          : "", 
         hora: news.data
           ? new Date(news.data).toLocaleTimeString("pt-BR", {
               hour: "2-digit",
               minute: "2-digit",
-              timeZone: "UTC", // Adiciona timeZone se necessário
+              timeZone: "UTC", 
             })
           : "",
       }
@@ -76,10 +76,10 @@ export default async function Home() {
   let cardNewsData = [];
   let destaqueNewsData = [];
   let eventoNewsData = [];
-  let slideNewsData = []; // Dados para o carrossel
+  let slideNewsData = []; 
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Use variável de ambiente
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; 
 
     const configResponse = await fetch(`${baseUrl}/api/configs`, {
       cache: "no-store",
@@ -128,7 +128,6 @@ export default async function Home() {
       return formatCardData(news); 
     });
 
-  // Formatar slides para o carrossel
   const formattedSlides = slideNewsData.map(formatSlideData).filter(Boolean);
 
   return (
