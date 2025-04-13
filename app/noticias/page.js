@@ -87,7 +87,7 @@ export default function TodasNoticias() {
       </div>
 
       {/* Conteúdo principal - com margens */}
-      <main className="flex-grow bg-white mt-2 rounded-lg bg-white mx-[10%]">
+      <main className="flex-grow mt-2 rounded-lg bg-white mx-[10%]">
         <div className="container mx-auto px-4 py-8">
 
           {/* Filtros */}

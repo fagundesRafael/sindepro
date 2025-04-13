@@ -252,7 +252,7 @@ export default function NoticiaDetalhada() {
                     <SocialBar />
                     <Navbar />
                 </div>
-                <main className="flex-grow container mx-auto px-4 py-8 flex justify-center items-center mx-[10%]">
+                <main className="flex-grow container px-4 py-8 flex justify-center items-center mx-[10%]">
                     <p>Carregando...</p>
                 </main>
                 <div className="-mx-[10%]">
@@ -270,7 +270,7 @@ export default function NoticiaDetalhada() {
                     <SocialBar />
                     <Navbar />
                 </div>
-                <main className="flex-grow container mx-auto px-4 py-8 flex flex-col justify-center items-center mx-[10%]">
+                <main className="flex-grow container px-4 py-8 flex flex-col justify-center items-center mx-[10%]">
                     <p className="text-red-600 text-xl mb-4">{mensagemGeral.texto || 'Não foi possível carregar a notícia ou o ID é inválido.'}</p>
                     <button
                         onClick={() => router.back()}

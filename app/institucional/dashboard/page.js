@@ -779,7 +779,7 @@ export default function Dashboard() {
         <Navbar />
       </div>
       
-      <main className="flex-grow bg-white mt-2 rounded-lg bg-white mx-[10%]">
+      <main className="flex-grow mt-2 rounded-lg bg-white mx-[10%]">
         {/* Título do Painel */}
         <div className="mb-2 flex ">
           <h1 className="text-3xl font-bold text-gray-800">Painel de Controle</h1>
