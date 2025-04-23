@@ -29,12 +29,13 @@ export default function Diretoria() {
                                 <Image
                                     src="/general/presidente.jpeg" // Path relative to the public directory
                                     alt="Foto do Presidente Dr Mário Jorge Pinto Sobrinho"
-                                    width={200}  // Specify desired width (adjust as needed)
-                                    height={250} // Specify desired height (adjust to maintain aspect ratio)
+                                    width={400}  // Specify desired width (adjust as needed)
+                                    height={500} // Specify desired height (adjust to maintain aspect ratio)
                                     className="rounded-lg shadow-md object-cover" // Style the image
                                     priority // Optional: Load image faster if it's above the fold
                                 />
-                                <h1 className="relative text-red-600 text-sm mt-2">Dr Mário Jorge Pinto Sobrinho</h1>
+                                <h1 className="relative text-red-600 text-sm mt-2 mx-auto">Dr Mário Jorge Pinto Sobrinho</h1>
+                                <h1 className="relative text-red-600 text-sm mx-auto">PRESIDENTE SINDEPRO</h1>
                                 {/* <h2 className="text-red-600" >Presidente SINDEPRO</h2> */}
                             </div>
 
@@ -50,7 +51,7 @@ export default function Diretoria() {
 
                                 <div className="mt-6">
                                     <p className="font-bold text-lg mb-2">Conselho Fiscal:</p>
-                                    <ul className="list-disc pl-6 sm:pl-10 space-y-1">
+                                    <ul>
                                         <li>Dr Anderson Fernandes e Melo</li>
                                         <li>Dr Raimundo Mendes de Souza</li>
                                         <li>Dra Ingrid da Silva Brito Brandão</li>
@@ -59,7 +60,7 @@ export default function Diretoria() {
 
                                 <div className="mt-6">
                                     <p className="font-bold text-lg mb-2">Suplentes:</p>
-                                    <ul className="list-disc pl-6 sm:pl-10 space-y-1">
+                                    <ul>
                                         <li>Dr Hazael Francisco dos Santos</li>
                                         <li>Dr Herivelto Leal de Souza</li>
                                         <li>Dr Juracy Henrique de Souza Aguiar</li>
