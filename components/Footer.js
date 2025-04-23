@@ -58,6 +58,7 @@ export default function Footer() {
               <li><Link href="/institucional/convenios" className="hover:translate-x-1 transition-transform duration-300 hover:text-gray-200 text-sm">Convênios</Link></li>
               <li><Link href="/filiacao" className="hover:translate-x-1 transition-transform duration-300 hover:text-gray-200 text-sm">Afilie-se Já</Link></li>
               <li><Link href="/area-do-afiliado" className="hover:translate-x-1 transition-transform duration-300 hover:text-gray-200 text-sm">Área do Afiliado</Link></li>
+              <li><Link href="/sobre" className="hover:translate-x-1 transition-transform duration-300 hover:text-gray-200 text-sm">Sobre o SINDEPRO</Link></li>
             </ul>
           </div>
 

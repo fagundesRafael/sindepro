@@ -79,6 +79,11 @@ export default function Navbar() {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-700 transition-all duration-300 ease-in-out group-hover:w-full"></span>
             </Link>
 
+            <Link href="/sobre" className="text-gray-800 hover:text-red-700 font-medium relative group">
+              <span>Sobre</span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-700 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+            </Link>
+
             {/* Menu Institucional - agora visível para todos */}
             <div
               className="relative"
@@ -148,7 +153,7 @@ export default function Navbar() {
                   Contatos
                 </Link>
               </div>
-            </div>
+            </div>      
 
             <Link href="/filiacao" className="text-red-600 hover:text-red-800 font-medium relative group">
               <span>Filie-se</span>
