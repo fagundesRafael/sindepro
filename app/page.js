@@ -8,17 +8,17 @@ import SocialBar from "../components/SocialBar";
 import NewsCarousel from "../components/NewsCarousel";
 
 async function fetchNewsByIds(ids) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; 
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
   const newsPromises = ids
-    .filter(Boolean) 
+    .filter(Boolean)
     .map(
       (id) =>
-        fetch(`${baseUrl}/api/news/${id}`, { cache: "no-store" }) 
-          .then((res) => (res.ok ? res.json() : null)) 
-          .catch(() => null) 
+        fetch(`${baseUrl}/api/news/${id}`, { cache: "no-store" })
+          .then((res) => (res.ok ? res.json() : null))
+          .catch(() => null)
     );
   const results = await Promise.all(newsPromises);
-  return results.filter(Boolean); 
+  return results.filter(Boolean);
 }
 
 function formatCardData(news) {
@@ -30,12 +30,12 @@ function formatCardData(news) {
         imagem: news.imagem || "/general/no-image.jpg",
         data: news.data
           ? new Date(news.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })
-          : "", 
+          : "",
         hora: news.data
           ? new Date(news.data).toLocaleTimeString("pt-BR", {
               hour: "2-digit",
               minute: "2-digit",
-              timeZone: "UTC", 
+              timeZone: "UTC",
             })
           : "",
       }
@@ -54,7 +54,7 @@ function formatSlideData(news) {
     ? {
         id: news._id,
         titulo: news.titulo,
-        texto: news.descricao, 
+        texto: news.descricao,
         imagem: news.imagem || "/general/no-image.jpg",
         data: news.data
           ? new Date(news.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })
@@ -68,7 +68,7 @@ function formatSlideData(news) {
           : "",
         autor: news.autor,
       }
-    : null; 
+    : null;
 }
 
 export default async function Home() {
@@ -76,14 +76,14 @@ export default async function Home() {
   let cardNewsData = [];
   let destaqueNewsData = [];
   let eventoNewsData = [];
-  let slideNewsData = []; 
+  let slideNewsData = [];
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; 
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
     const configResponse = await fetch(`${baseUrl}/api/configs`, {
       cache: "no-store",
-    }); 
+    });
     if (configResponse.ok) {
       configData = await configResponse.json();
     } else {
@@ -101,11 +101,11 @@ export default async function Home() {
       .filter(Boolean);
     const slideIds = ["S1", "S2", "S3"]
       .map((key) => configData?.[key])
-      .filter(Boolean); 
+      .filter(Boolean);
 
     const allNewsIds = [
       ...new Set([...cardIds, ...destaqueIds, ...eventoIds, ...slideIds]),
-    ]; 
+    ];
     const allNews = await fetchNewsByIds(allNewsIds);
 
     const newsMap = new Map(allNews.map((news) => [news._id.toString(), news]));
@@ -113,7 +113,7 @@ export default async function Home() {
     cardNewsData = cardIds.map((id) => newsMap.get(id));
     destaqueNewsData = destaqueIds.map((id) => newsMap.get(id)).filter(Boolean);
     eventoNewsData = eventoIds.map((id) => newsMap.get(id)).filter(Boolean);
-    slideNewsData = slideIds.map((id) => newsMap.get(id)).filter(Boolean); 
+    slideNewsData = slideIds.map((id) => newsMap.get(id)).filter(Boolean);
   } catch (error) {
     console.error(
       "Erro ao buscar dados na Home Page (Server Component):",
@@ -124,8 +124,8 @@ export default async function Home() {
   const processedCards = Array(4)
     .fill(null)
     .map((_, index) => {
-      const news = cardNewsData[index]; 
-      return formatCardData(news); 
+      const news = cardNewsData[index];
+      return formatCardData(news);
     });
 
   const formattedSlides = slideNewsData.map(formatSlideData).filter(Boolean);
@@ -140,38 +140,41 @@ export default async function Home() {
       <div className="py-6 bg-gray-100 mx-[10%] rounded mt-4 ">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4">
-            <div className="w-full lg:w-[60%] h-[calc(2*152px+1rem)]">
+            {/* INÍCIO DA ALTERAÇÃO - CAROUSEL */}
+            <div className="w-full lg:w-[60%] aspect-square">
               <NewsCarousel initialSlides={formattedSlides} />
             </div>
+            {/* FIM DA ALTERAÇÃO - CAROUSEL */}
 
+            {/* INÍCIO DA ALTERAÇÃO - CARDS LATERAIS */}
             <div className="w-full lg:w-[40%] grid grid-cols-2 gap-4">
               {processedCards.map(
                 (
                   noticia,
-                  index 
+                  index
                 ) => (
                   <div
                     key={`card-section-${noticia.id || index}`}
-                    className="bg-white rounded-lg shadow-md overflow-hidden h-[152px]"
+                    className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
                   >
-                    <div className="relative h-16">
+                    <div className="relative w-full aspect-square bg-gray-200">
                       <Image
                         src={noticia.imagem}
                         alt={noticia.titulo || "Imagem da notícia"}
                         fill
-                        sizes="(max-width: 1024px) 20vw, 15vw" 
-                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 1024px) 20vw, 15vw"
+                        className="object-contain"
                         priority={index === 0}
                       />
                     </div>
-                    <div className="p-2">
+                    <div className="p-2 flex flex-col flex-grow">
                       {noticia.id ? (
                         <>
                           <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
                             <span>{noticia.data}</span>
                             <span>{noticia.hora}</span>
                           </div>
-                          <h3 className="font-bold text-xs mb-1 text-gray-800 hover:text-red-700 line-clamp-2">
+                          <h3 className="font-bold text-xs mb-1 text-gray-800 hover:text-red-700 line-clamp-2 flex-grow">
                             <Link href={`/noticias/${noticia.id}`}>
                               {noticia.titulo}
                             </Link>
@@ -181,20 +184,21 @@ export default async function Home() {
                           </p>
                         </>
                       ) : (
-                        <>
+                        <div className="flex flex-col flex-grow justify-center">
                           <h3 className="font-bold text-xs mb-1 text-gray-400">
                             {noticia.titulo}
                           </h3>
                           <p className="text-gray-400 text-[10px]">
                             {noticia.resumo}
                           </p>
-                        </>
+                        </div>
                       )}
                     </div>
                   </div>
                 )
               )}
             </div>
+            {/* FIM DA ALTERAÇÃO - CARDS LATERAIS */}
           </div>
         </div>
       </div>
@@ -217,13 +221,13 @@ export default async function Home() {
                   key={`destaque-section-${noticia._id}-${index}`}
                   className="bg-white rounded-lg shadow-md overflow-hidden"
                 >
-                  <div className="relative h-48">
+                  <div className="relative aspect-square bg-gray-200">
                     <Image
                       src={noticia.imagem || "/general/no-image.jpg"}
                       alt={noticia.titulo || "Imagem da notícia em destaque"}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      style={{ objectFit: "cover" }}
+                      className="object-contain"
                     />
                     <div className="absolute top-0 left-0 bg-red-700 text-white px-2 py-1 text-sm">
                       {noticia.categoria}
@@ -317,6 +321,7 @@ export default async function Home() {
               ))}
             </div>
           </section>
+
           <section className="mt-16">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Área Restrita{" "}
